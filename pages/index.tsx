@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import data from "./data.json";
 import About from "../components/About";
 import MainCta from "../components/MainCta";
@@ -30,8 +29,8 @@ export default function HomePage() {
         {data?.components?.map((item, idx) => {
           const key = item?.name as ComponentMapKeyType;
           const Comp = componentMap[key];
-
-          return <Comp key={idx} data={item?.data as any} />;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return <Comp key={idx} data={item?.data as any}/>;
         })}
       </div>
     </div>

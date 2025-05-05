@@ -47,6 +47,12 @@
             "description":"c3",
             "url":"https://github.com/masaxsuzu/c3",
             "titleTextClass":"text-rust"
+          },
+          {
+            "title":"Yu-Gi-Oh Hand Simulator",
+            "description":"hand-simulator",
+            "url":"https://github.com/masaxsuzu/hand-simulator",
+            "titleTextClass":"text-ts"
           }
         ]
       }

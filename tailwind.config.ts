@@ -9,7 +9,7 @@ const colors = {
   cardborder: "#ffffff0f",
   article: "#dd62a7",
   npm: "#db626f",
-  lib: "#ebda69",
+  ts: "#3178c6",
   csharp: "#178600",
   c: "#555555",
   rust: "#dea584",
