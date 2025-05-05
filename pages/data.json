@@ -1,0 +1,55 @@
+{
+
+  "title":"masaxsuzu",
+  "siteDescription":"Portfolio Website",
+  "components": [
+    {
+      "name": "MainCta",
+      "data": {
+        "name": "masaxsuzu",
+        "bio": "Software Engineer | C# | Fitness enthusiast"
+      }
+    },
+    {
+      "name": "Divider",
+      "data": {}
+    },
+    {
+      "name": "About",
+      "data": {
+        "title": "About Me",
+        "description": "Hi! I'm masaxsuzu, a software engineer, most of the time I work in Desktop App and Backend development (C#) and some other stuffs. I also like contributing on open source projects, writing blogs and learning new computer science concepts! Outside of coding, I enjoy training in the gym."
+      }
+    },
+    {
+      "name": "Divider",
+      "data": {}
+    },
+    {
+      "name": "Cards",
+      "data":{
+        "title":"Public Content",
+        "data": [
+          {
+            "title":"A RDBMS",
+            "description":"skyla",
+            "url":"https://github.com/masaxsuzu/skyla",
+            "titleTextClass":"text-csharp"
+          },
+          {
+            "title":"A Self-Hosted C Compiler",
+            "description":"c2",
+            "url":"https://github.com/masaxsuzu/c2",
+            "titleTextClass":"text-c"
+          },
+          {
+            "title":"A C Compiler",
+            "description":"c3",
+            "url":"https://github.com/masaxsuzu/c3",
+            "titleTextClass":"text-rust"
+          }
+        ]
+      }
+    }
+  ]
+}
