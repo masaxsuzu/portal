@@ -12,7 +12,7 @@ interface CardProps {
     titleTextClass = "text-skyblue",
   }: CardProps) {
     return (
-      <div className="bg-cardbg flex flex-col border-2 border-cardborder py-4 px-8 rounded-2xl my-4 lg:w-[360px] md:w-[360px] mr-4 shadow-md shadow-cardbg">
+      <div className="bg-cardbg flex flex-col border-2 border-cardborder py-4 px-8 rounded-2xl my-4 w-[100%] sm:w-[360px] md:w-[320px] lg:w-[225px] xl:w-[200px] mr-4 shadow-md shadow-cardbg">
         <div className="flex justify-between relative">
           <span className={`text-[16px] ${titleTextClass} font-[600]`}>
             {title}
