@@ -23,7 +23,7 @@ export default function LoginPage() {
     if (res.ok) {
       router.push(redirectPath);
     } else {
-      setError('パスワードが違います');
+      setError('Password is incorrect');
     }
   };
 
@@ -34,10 +34,10 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit} style={{
         backgroundColor: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', minWidth: '320px'
       }}>
-        <h1 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'center', color: '#333' }}>ログイン</h1>
+        <h1 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'center', color: '#333' }}>Login</h1>
         <input
           type="password"
-          placeholder="パスワード"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
@@ -48,7 +48,7 @@ export default function LoginPage() {
           disabled={isLoading}
           style={{ width: '100%', padding: '0.75rem', backgroundColor: isLoading ? '#ccc' : '#0070f3', color: '#fff', border: 'none', borderRadius: '4px' }}
         >
-          {isLoading ? '認証中...' : 'ログイン'}
+          {isLoading ? 'Loading...' : 'Login'}
         </button>
         {error && <p style={{ marginTop: '1rem', color: 'red', fontSize: '0.9rem', textAlign: 'center' }}>{error}</p>}
       </form>
