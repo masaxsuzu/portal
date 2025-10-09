@@ -2,7 +2,7 @@ interface AboutProps {
     title: string;
     description: string;
   }
-  function About({ data }: { data: AboutProps }) {
+  function About({ data }: { data?: AboutProps }) {
     return (
       <div className="w-full">
         <h2 className="text-white text-[30px] pb-6">{data?.title}</h2>

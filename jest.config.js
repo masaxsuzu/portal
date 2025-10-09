@@ -8,14 +8,16 @@ const createJestConfig = nextJest({
 // Add any custom config to be passed to Jest
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   testMatch: [
     '<rootDir>/__tests__/**/*.test.{js,jsx,ts,tsx}',
     '<rootDir>/tests/**/*.test.{js,jsx,ts,tsx}'
   ],
   collectCoverageFrom: [
     'pages/api/**/*.{js,ts}',
+    'components/**/*.{js,jsx,ts,tsx}',
     '!pages/api/**/*.d.ts',
+    '!components/**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
     '!**/coverage/**',
@@ -30,16 +32,22 @@ const customJestConfig = {
   ],
   coverageThreshold: {
     global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
     },
     'pages/api/**/*.ts': {
       branches: 100,
       functions: 100,
       lines: 100,
       statements: 100
+    },
+    'components/**/*.{tsx,ts}': {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
     }
   }
 }

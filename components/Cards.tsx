@@ -29,7 +29,7 @@ interface CardProps {
     );
   }
   
-  function Cards({ data }: { data: { title: string; data: CardProps[] } }) {
+  function Cards({ data }: { data?: { title: string; data: CardProps[] } }) {
     return (
       <>
         <h2 className="text-white text-[30px] pb-6">{data?.title}</h2>
