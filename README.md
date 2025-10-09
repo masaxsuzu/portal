@@ -24,6 +24,36 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Testing
+
+This project includes comprehensive API tests using Jest and Supertest.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm test -- --coverage
+```
+
+### Test Structure
+
+- `__tests__/api/login.test.ts` - Unit tests for the login API using mocked HTTP requests
+- `__tests__/api/login.integration.test.ts` - Integration tests for the login API with a real Next.js server
+
+### Environment Variables for Testing
+
+Set `PASSWORD` environment variable for authentication testing:
+
+```bash
+export PASSWORD=your-test-password
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
