@@ -6,7 +6,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const redirectPath = typeof router.query.redirect === 'string' ? router.query.redirect : '/';
+
+  const getValidRedirectPath = (path: unknown): string => {
+    if (typeof path !== 'string') return '/';
+    // Only allow relative paths starting with / and not containing protocol or double slashes
+    if (path.startsWith('/') && !path.startsWith('//') && !path.includes(':')) {
+      return path;
+    }
+    return '/';
+  };
+  const redirectPath = getValidRedirectPath(router.query.redirect);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
