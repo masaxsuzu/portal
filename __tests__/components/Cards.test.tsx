@@ -21,15 +21,15 @@ describe('Cards Component', () => {
         title: 'Card 1',
         url: 'https://example1.com',
         description: 'Description 1',
-        titleTextClass: 'text-skyblue' as const
+        titleTextClass: 'text-skyblue' as const,
       },
       {
         title: 'Card 2',
         url: 'https://example2.com',
         description: 'Description 2',
-        titleTextClass: 'text-npm' as const
-      }
-    ]
+        titleTextClass: 'text-npm' as const,
+      },
+    ],
   };
 
   it('renders without crashing', () => {
@@ -88,10 +88,10 @@ describe('Cards Component', () => {
     });
 
     const card1TitleSpan = Array.from(container.querySelectorAll('span')).find(
-      span => span.textContent === 'Card 1'
+      (span) => span.textContent === 'Card 1'
     );
     const card2TitleSpan = Array.from(container.querySelectorAll('span')).find(
-      span => span.textContent === 'Card 2'
+      (span) => span.textContent === 'Card 2'
     );
 
     expect(card1TitleSpan?.className).toContain('text-skyblue');
@@ -109,9 +109,9 @@ describe('Cards Component', () => {
         {
           title: 'Default Card',
           url: 'https://default.com',
-          description: 'Default Description'
-        } as any
-      ]
+          description: 'Default Description',
+        } as any,
+      ],
     };
 
     const root = createRoot(container);
@@ -121,7 +121,7 @@ describe('Cards Component', () => {
     });
 
     const cardTitleSpan = Array.from(container.querySelectorAll('span')).find(
-      span => span.textContent === 'Default Card'
+      (span) => span.textContent === 'Default Card'
     );
     expect(cardTitleSpan?.className).toContain('text-skyblue');
 
@@ -133,7 +133,7 @@ describe('Cards Component', () => {
   it('handles empty data array', () => {
     const emptyData = {
       title: 'Empty Cards',
-      data: []
+      data: [],
     };
 
     const root = createRoot(container);

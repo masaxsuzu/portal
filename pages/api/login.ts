@@ -22,6 +22,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res.setHeader('Set-Cookie', cookie);
     return res.status(200).json({ success: true });
   } else {
-    return res.status(401).json({ success: false, message: 'パスワードが間違っています' });
+    return res
+      .status(401)
+      .json({ success: false, message: 'パスワードが間違っています' });
   }
 }

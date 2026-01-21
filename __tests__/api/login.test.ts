@@ -50,7 +50,7 @@ describe('/api/login', () => {
     expect(res._getStatusCode()).toBe(401);
     expect(JSON.parse(res._getData())).toEqual({
       success: false,
-      message: 'パスワードが間違っています'
+      message: 'パスワードが間違っています',
     });
   });
 
@@ -65,7 +65,7 @@ describe('/api/login', () => {
     expect(res._getStatusCode()).toBe(401);
     expect(JSON.parse(res._getData())).toEqual({
       success: false,
-      message: 'パスワードが間違っています'
+      message: 'パスワードが間違っています',
     });
   });
 

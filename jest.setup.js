@@ -5,13 +5,13 @@
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 // Mock environment variables for testing
-process.env.NODE_ENV = 'test'
-process.env.PASSWORD = 'test-password'
+process.env.NODE_ENV = 'test';
+process.env.PASSWORD = 'test-password';
 
 // Add DOM environment setup for component tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,

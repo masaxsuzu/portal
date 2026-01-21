@@ -16,7 +16,7 @@ describe('MainCta Component', () => {
 
   const mockData = {
     name: 'John Doe',
-    bio: 'Software Developer'
+    bio: 'Software Developer',
   };
 
   it('renders without crashing', () => {
@@ -55,7 +55,7 @@ describe('MainCta Component', () => {
     });
 
     const nameDiv = Array.from(container.querySelectorAll('div')).find(
-      div => div.textContent === 'John Doe'
+      (div) => div.textContent === 'John Doe'
     );
 
     expect(nameDiv?.className).toContain('text-white');
@@ -76,7 +76,7 @@ describe('MainCta Component', () => {
     });
 
     const bioDiv = Array.from(container.querySelectorAll('div')).find(
-      div => div.textContent === 'Software Developer'
+      (div) => div.textContent === 'Software Developer'
     );
 
     expect(bioDiv?.className).toContain('text-primary');
@@ -134,7 +134,7 @@ describe('MainCta Component', () => {
   it('renders long text correctly', () => {
     const longData = {
       name: 'This is a very long name that should render correctly',
-      bio: 'This is a very long bio description'
+      bio: 'This is a very long bio description',
     };
 
     const root = createRoot(container);
@@ -143,8 +143,12 @@ describe('MainCta Component', () => {
       root.render(<MainCta data={longData} />);
     });
 
-    expect(container.textContent).toContain('This is a very long name that should render correctly');
-    expect(container.textContent).toContain('This is a very long bio description');
+    expect(container.textContent).toContain(
+      'This is a very long name that should render correctly'
+    );
+    expect(container.textContent).toContain(
+      'This is a very long bio description'
+    );
 
     act(() => {
       root.unmount();

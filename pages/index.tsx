@@ -1,14 +1,10 @@
-import Head from "next/head";
-import data from "./data.json";
-import About from "../components/About";
-import MainCta from "../components/MainCta";
-import Divider from "../components/Divider";
-import Cards from "../components/Cards";
-type ComponentMapKeyType =
-  | "About"
-  | "MainCta"
-  | "Divider"
-  | "Cards";
+import Head from 'next/head';
+import data from './data.json';
+import About from '../components/About';
+import MainCta from '../components/MainCta';
+import Divider from '../components/Divider';
+import Cards from '../components/Cards';
+type ComponentMapKeyType = 'About' | 'MainCta' | 'Divider' | 'Cards';
 
 const componentMap = {
   About,
@@ -30,7 +26,7 @@ export default function HomePage() {
           const key = item?.name as ComponentMapKeyType;
           const Comp = componentMap[key];
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return <Comp key={idx} data={item?.data as any}/>;
+          return <Comp key={idx} data={item?.data as any} />;
         })}
       </div>
     </div>

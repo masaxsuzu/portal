@@ -37,29 +37,76 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
-      display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f8f9fa'
-    }}>
-      <form onSubmit={handleSubmit} style={{
-        backgroundColor: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', minWidth: '320px'
-      }}>
-        <h1 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'center', color: '#333' }}>Login</h1>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#f8f9fa',
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          backgroundColor: '#fff',
+          padding: '2rem',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          minWidth: '320px',
+        }}
+      >
+        <h1
+          style={{
+            marginBottom: '1.5rem',
+            fontSize: '1.5rem',
+            textAlign: 'center',
+            color: '#333',
+          }}
+        >
+          Login
+        </h1>
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
-          style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            marginBottom: '1rem',
+            borderRadius: '4px',
+            border: '1px solid #ccc',
+            boxSizing: 'border-box',
+          }}
         />
         <button
           type="submit"
           disabled={isLoading}
-          style={{ width: '100%', padding: '0.75rem', backgroundColor: isLoading ? '#ccc' : '#0070f3', color: '#fff', border: 'none', borderRadius: '4px' }}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            backgroundColor: isLoading ? '#ccc' : '#0070f3',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+          }}
         >
           {isLoading ? 'Loading...' : 'Login'}
         </button>
-        {error && <p style={{ marginTop: '1rem', color: 'red', fontSize: '0.9rem', textAlign: 'center' }}>{error}</p>}
+        {error && (
+          <p
+            style={{
+              marginTop: '1rem',
+              color: 'red',
+              fontSize: '0.9rem',
+              textAlign: 'center',
+            }}
+          >
+            {error}
+          </p>
+        )}
       </form>
     </div>
   );

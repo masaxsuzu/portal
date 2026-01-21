@@ -26,7 +26,9 @@ describe('Login redirect validation', () => {
       expect(getValidRedirectPath('/')).toBe('/');
       expect(getValidRedirectPath('/dashboard')).toBe('/dashboard');
       expect(getValidRedirectPath('/user/profile')).toBe('/user/profile');
-      expect(getValidRedirectPath('/page?query=value')).toBe('/page?query=value');
+      expect(getValidRedirectPath('/page?query=value')).toBe(
+        '/page?query=value'
+      );
     });
 
     it('should block protocol-relative URLs (open redirect attack)', () => {
@@ -38,7 +40,9 @@ describe('Login redirect validation', () => {
       expect(getValidRedirectPath('https://evil.com')).toBe('/');
       expect(getValidRedirectPath('http://evil.com')).toBe('/');
       expect(getValidRedirectPath('javascript:alert(1)')).toBe('/');
-      expect(getValidRedirectPath('data:text/html,<script>alert(1)</script>')).toBe('/');
+      expect(
+        getValidRedirectPath('data:text/html,<script>alert(1)</script>')
+      ).toBe('/');
     });
 
     it('should block paths with embedded protocols', () => {
