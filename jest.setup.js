@@ -8,17 +8,19 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 process.env.NODE_ENV = 'test';
 process.env.PASSWORD = 'test-password';
 
-// Add DOM environment setup for component tests
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+// Add DOM environment setup for component tests (jsdom environment only)
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
