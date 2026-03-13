@@ -4,7 +4,10 @@ import crypto from 'crypto';
 
 export function hashToken(password: string): string {
   const salt = process.env.SALT ?? '';
-  return crypto.createHash('sha256').update(salt + password).digest('hex');
+  return crypto
+    .createHash('sha256')
+    .update(salt + password)
+    .digest('hex');
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
