@@ -1,70 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# portal
 
-## Getting Started
+masaxsuzu のポートフォリオサイト。Next.js 製、パスワード認証付き。
 
-First, run the development server:
+## 技術スタック
+
+- **Framework**: Next.js (Pages Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Testing**: Jest + Supertest
+- **Runtime**: Node.js
+
+## 機能
+
+- パスワード認証（Cookie ベース、`middleware.ts` でルート保護）
+- `data.json` 駆動のコンポーネント描画（About / Cards / MainCta / Divider）
+- API ルート `/api/login` によるログイン処理
+
+## 環境変数
+
+| 変数名     | 説明                   | 必須 |
+| ---------- | ---------------------- | ---- |
+| `PASSWORD` | ログイン用パスワード   | ✓    |
+
+`.env.local` を作成して設定する:
+
+```bash
+PASSWORD=your-secret-password
+```
+
+## セットアップ
+
+```bash
+npm install
+```
+
+## 開発サーバー起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) をブラウザで開く。
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Testing
-
-This project includes comprehensive API tests using Jest and Supertest.
-
-### Running Tests
+## ビルド
 
 ```bash
-# Run all tests
+npm run build
+npm start
+```
+
+## テスト
+
+```bash
+# 全テスト実行
 npm test
 
-# Run tests in watch mode
+# ウォッチモード
 npm run test:watch
 
-# Run tests with coverage
-npm test -- --coverage
+# カバレッジ
+npm run test:coverage
 ```
 
-### Test Structure
+### テスト構成
 
-- `__tests__/api/login.test.ts` - Unit tests for the login API using mocked HTTP requests
-- `__tests__/api/login.integration.test.ts` - Integration tests for the login API with a real Next.js server
+| ファイル                                       | 内容                                        |
+| ---------------------------------------------- | ------------------------------------------- |
+| `__tests__/api/login.test.ts`                  | ログイン API のユニットテスト（モック使用） |
+| `__tests__/api/login.integration.test.ts`      | ログイン API の統合テスト（実サーバー）     |
 
-### Environment Variables for Testing
+## プロジェクト構成
 
-Set `PASSWORD` environment variable for authentication testing:
-
-```bash
-export PASSWORD=your-test-password
+```
+portal/
+├── components/        # UI コンポーネント (About, Cards, MainCta, Divider)
+├── pages/
+│   ├── api/           # API ルート
+│   ├── data.json      # サイトコンテンツ設定
+│   ├── index.tsx      # トップページ
+│   └── login.tsx      # ログインページ
+├── middleware.ts       # 認証ミドルウェア
+└── __tests__/         # テスト
 ```
 
-## Learn More
+## コンテンツ編集
 
-To learn more about Next.js, take a look at the following resources:
+`pages/data.json` を編集することでサイトのコンテンツを更新できる。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+```json
+{
+  "title": "サイトタイトル",
+  "siteDescription": "説明文",
+  "components": [...]
+}
+```
