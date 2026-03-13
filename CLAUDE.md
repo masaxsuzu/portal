@@ -77,6 +77,7 @@ npm run test:watch
 
 | ファイル                          | 内容                        |
 | --------------------------------- | --------------------------- |
-| `__tests__/api/login.test.ts`     | ログイン API ユニットテスト |
-| `__tests__/components/*.test.tsx` | 各 UI コンポーネントテスト  |
-| `__tests__/pages/login.test.tsx`  | ログインページテスト        |
+| `__tests__/api/login.test.ts`              | ログイン API ユニットテスト               |
+| `__tests__/middleware/middleware.test.ts`  | middleware ユニットテスト                 |
+| `__tests__/components/*.test.tsx`          | 各 UI コンポーネントテスト                |
+| `__tests__/pages/login.test.tsx`           | ログインページテスト                      |
