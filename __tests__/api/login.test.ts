@@ -1,10 +1,11 @@
 import { createMocks } from 'node-mocks-http';
-import handler from '../../pages/api/login';
+import handler, { hashToken } from '../../pages/api/login';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 describe('/api/login', () => {
   beforeEach(() => {
     process.env.PASSWORD = 'test-password';
+    process.env.SALT = 'test-salt';
   });
 
   it('should return 405 for non-POST requests', async () => {
@@ -17,7 +18,7 @@ describe('/api/login', () => {
     expect(res._getStatusCode()).toBe(405);
   });
 
-  it('should return 200 and set cookie for correct password', async () => {
+  it('should return 200 and set cookie with hashed token for correct password', async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'POST',
       body: {
@@ -32,7 +33,9 @@ describe('/api/login', () => {
 
     const cookies = res._getHeaders()['set-cookie'];
     expect(cookies).toBeDefined();
-    expect(cookies).toContain('auth=true');
+    const expectedToken = hashToken('test-password');
+    expect(cookies).toContain(`auth=${expectedToken}`);
+    expect(cookies).not.toContain('auth=true');
     expect(cookies).toContain('HttpOnly');
     expect(cookies).toContain('SameSite=Strict');
   });
@@ -104,5 +107,26 @@ describe('/api/login', () => {
 
     const cookies = res._getHeaders()['set-cookie'];
     expect(cookies).toContain('Max-Age=3600');
+  });
+
+  describe('hashToken', () => {
+    it('should produce different tokens for different salts', () => {
+      process.env.SALT = 'salt-a';
+      const tokenA = hashToken('password');
+      process.env.SALT = 'salt-b';
+      const tokenB = hashToken('password');
+      expect(tokenA).not.toBe(tokenB);
+    });
+
+    it('should produce a 64-character hex string (SHA-256)', () => {
+      const token = hashToken('test-password');
+      expect(token).toMatch(/^[0-9a-f]{64}$/);
+    });
+
+    it('should use empty string as default salt when SALT is not set', () => {
+      delete process.env.SALT;
+      const token = hashToken('password');
+      expect(token).toMatch(/^[0-9a-f]{64}$/);
+    });
   });
 });
