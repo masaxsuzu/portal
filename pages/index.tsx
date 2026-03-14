@@ -6,6 +6,7 @@ import Divider from '../components/Divider';
 import Cards from '../components/Cards';
 import Controls from '../components/Controls';
 import { useAppContext } from '../contexts/AppContext';
+import type { Translations } from '../lib/i18n';
 
 type ComponentMapKeyType = 'About' | 'MainCta' | 'Divider' | 'Cards';
 
@@ -16,11 +17,10 @@ const componentMap = {
   Cards,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function applyTranslations(
   name: string,
-  itemData: any,
-  t: ReturnType<typeof useAppContext>['t']
+  itemData: Record<string, unknown>,
+  t: Translations
 ) {
   if (name === 'MainCta') return { ...itemData, bio: t.mainCtaBio };
   if (name === 'About')
@@ -44,12 +44,14 @@ export default function HomePage() {
         {data?.components?.map((item, idx) => {
           const key = item?.name as ComponentMapKeyType;
           const Comp = componentMap[key];
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const translatedData = applyTranslations(
+            item.name,
+            item?.data as Record<string, unknown>,
+            t
+          );
           return (
-            <Comp
-              key={idx}
-              data={applyTranslations(item.name, item?.data as any, t)}
-            />
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            <Comp key={idx} data={translatedData as any} />
           );
         })}
       </div>
