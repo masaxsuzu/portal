@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Controls from '../components/Controls';
+import { useAppContext } from '../contexts/AppContext';
 
 export default function LoginPage() {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useAppContext();
 
   const getValidRedirectPath = (path: unknown): string => {
     if (typeof path !== 'string') return '/';
@@ -33,7 +35,7 @@ export default function LoginPage() {
     if (res.ok) {
       router.push(redirectPath);
     } else {
-      setError('Password is incorrect');
+      setError(t.loginError);
     }
   };
 
@@ -44,10 +46,12 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg"
       >
-        <h1 className="text-primary text-2xl text-center mb-6">Login</h1>
+        <h1 className="text-primary text-2xl text-center mb-6">
+          {t.loginTitle}
+        </h1>
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t.loginPlaceholder}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
@@ -58,7 +62,7 @@ export default function LoginPage() {
           disabled={isLoading}
           className="w-full py-3 rounded bg-skyblue text-background font-semibold disabled:opacity-50"
         >
-          {isLoading ? 'Loading...' : 'Login'}
+          {isLoading ? t.loginLoading : t.loginButton}
         </button>
         {error && (
           <p className="mt-4 text-sm text-center text-red-400">{error}</p>
