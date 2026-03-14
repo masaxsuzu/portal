@@ -37,75 +37,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#f8f9fa',
-      }}
-    >
+    <div className="flex justify-center items-center h-screen bg-background">
       <form
         onSubmit={handleSubmit}
-        style={{
-          backgroundColor: '#fff',
-          padding: '2rem',
-          borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          minWidth: '320px',
-        }}
+        className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg"
       >
-        <h1
-          style={{
-            marginBottom: '1.5rem',
-            fontSize: '1.5rem',
-            textAlign: 'center',
-            color: '#333',
-          }}
-        >
-          Login
-        </h1>
+        <h1 className="text-primary text-2xl text-center mb-6">Login</h1>
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            marginBottom: '1rem',
-            borderRadius: '4px',
-            border: '1px solid #ccc',
-            boxSizing: 'border-box',
-          }}
+          className="w-full px-3 py-3 mb-4 rounded bg-background border border-cardborder text-primary placeholder-primary/40 outline-none focus:border-skyblue disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={isLoading}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            backgroundColor: isLoading ? '#ccc' : '#0070f3',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-          }}
+          className="w-full py-3 rounded bg-skyblue text-background font-semibold disabled:opacity-50"
         >
           {isLoading ? 'Loading...' : 'Login'}
         </button>
         {error && (
-          <p
-            style={{
-              marginTop: '1rem',
-              color: 'red',
-              fontSize: '0.9rem',
-              textAlign: 'center',
-            }}
-          >
-            {error}
-          </p>
+          <p className="mt-4 text-sm text-center text-red-400">{error}</p>
         )}
       </form>
     </div>
