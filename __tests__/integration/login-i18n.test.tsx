@@ -43,14 +43,17 @@ describe('LoginPage i18n integration', () => {
   it('renders English text by default', () => {
     const root = renderLogin();
 
-    expect(container.querySelector('h1')?.textContent).toBe('Login');
+    expect(container.querySelector('h1')?.textContent).toBe('Welcome');
+    expect(container.querySelector('p')?.textContent).toBe(
+      "masaxsuzu's private portfolio"
+    );
     expect(
       container
         .querySelector('input[type="password"]')
         ?.getAttribute('placeholder')
     ).toBe('Password');
     expect(container.querySelector('button[type="submit"]')?.textContent).toBe(
-      'Login'
+      'Enter'
     );
 
     act(() => {
@@ -62,14 +65,17 @@ describe('LoginPage i18n integration', () => {
     localStorage.setItem('lang', 'ja');
     const root = renderLogin();
 
-    expect(container.querySelector('h1')?.textContent).toBe('ログイン');
+    expect(container.querySelector('h1')?.textContent).toBe('ようこそ');
+    expect(container.querySelector('p')?.textContent).toBe(
+      'masaxsuzu のプライベートポートフォリオです'
+    );
     expect(
       container
         .querySelector('input[type="password"]')
         ?.getAttribute('placeholder')
     ).toBe('パスワード');
     expect(container.querySelector('button[type="submit"]')?.textContent).toBe(
-      'ログイン'
+      '入る'
     );
 
     act(() => {
@@ -81,7 +87,7 @@ describe('LoginPage i18n integration', () => {
     const root = renderLogin();
 
     // Starts in English
-    expect(container.querySelector('h1')?.textContent).toBe('Login');
+    expect(container.querySelector('h1')?.textContent).toBe('Welcome');
 
     // Click language toggle (shows "JA" when current lang is "en")
     const langBtn = container.querySelector(
@@ -92,7 +98,7 @@ describe('LoginPage i18n integration', () => {
     });
 
     // Now Japanese
-    expect(container.querySelector('h1')?.textContent).toBe('ログイン');
+    expect(container.querySelector('h1')?.textContent).toBe('ようこそ');
     expect(
       container
         .querySelector('input[type="password"]')
@@ -104,7 +110,7 @@ describe('LoginPage i18n integration', () => {
       langBtn.click();
     });
 
-    expect(container.querySelector('h1')?.textContent).toBe('Login');
+    expect(container.querySelector('h1')?.textContent).toBe('Welcome');
 
     act(() => {
       root.unmount();
@@ -122,7 +128,7 @@ describe('LoginPage i18n integration', () => {
       );
     });
 
-    const errorEl = container.querySelector('p');
+    const errorEl = container.querySelector('p.text-red-400');
     expect(errorEl?.textContent).toBe('Password is incorrect');
 
     act(() => {
@@ -142,7 +148,7 @@ describe('LoginPage i18n integration', () => {
       );
     });
 
-    const errorEl = container.querySelector('p');
+    const errorEl = container.querySelector('p.text-red-400');
     expect(errorEl?.textContent).toBe('パスワードが正しくありません');
 
     act(() => {

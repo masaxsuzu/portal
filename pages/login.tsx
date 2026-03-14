@@ -46,9 +46,12 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg"
       >
-        <h1 className="text-primary text-2xl text-center mb-6">
+        <h1 className="text-primary text-2xl text-center mb-2">
           {t.loginTitle}
         </h1>
+        <p className="text-primary/50 text-sm text-center mb-6">
+          {t.loginSubtext}
+        </p>
         <input
           type="password"
           placeholder={t.loginPlaceholder}
