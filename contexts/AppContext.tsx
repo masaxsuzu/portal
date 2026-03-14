@@ -34,7 +34,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
     const savedLang = localStorage.getItem('lang') as Lang | null;
     if (savedTheme === 'dark' || savedTheme === 'light') setTheme(savedTheme);
-    if (savedLang === 'en' || savedLang === 'ja') setLang(savedLang);
+    if (savedLang === 'en' || savedLang === 'ja') {
+      setLang(savedLang);
+    } else {
+      const browserLang = navigator.language.toLowerCase();
+      setLang(browserLang.startsWith('ja') ? 'ja' : 'en');
+    }
   }, []);
 
   useEffect(() => {
