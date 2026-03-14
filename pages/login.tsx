@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Controls from '../components/Controls';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex justify-center items-center h-screen bg-background">
+      <Controls />
       <form
         onSubmit={handleSubmit}
         className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg"
