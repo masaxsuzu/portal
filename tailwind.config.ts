@@ -1,12 +1,12 @@
 import type { Config } from 'tailwindcss';
 
 const colors = {
-  background: '#13111A',
-  primary: '#B7B4C7',
-  white: '#FFFFFF',
-  cardbg: '#1D1A27',
+  background: 'var(--color-background)',
+  primary: 'var(--color-primary)',
+  white: 'var(--color-on-surface)',
+  cardbg: 'var(--color-cardbg)',
+  cardborder: 'var(--color-cardborder)',
   skyblue: '#94C1F2',
-  cardborder: '#ffffff0f',
   article: '#dd62a7',
   npm: '#db626f',
   ts: '#3178c6',
@@ -20,6 +20,7 @@ const config: Config = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors,

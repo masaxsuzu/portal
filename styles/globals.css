@@ -1,8 +1,23 @@
 @import 'tailwindcss';
 
 @config "../tailwind.config.ts";
+
 :root {
-  --bg-background: #13111a;
+  /* Dark theme (default) */
+  --color-background: #13111a;
+  --color-primary: #b7b4c7;
+  --color-on-surface: #ffffff;
+  --color-cardbg: #1d1a27;
+  --color-cardborder: #ffffff0f;
+}
+
+:root.light {
+  /* Light theme */
+  --color-background: #f5f4fb;
+  --color-primary: #4a4760;
+  --color-on-surface: #1a1830;
+  --color-cardbg: #eceaf5;
+  --color-cardborder: rgba(74, 71, 96, 0.15);
 }
 
 html,
@@ -23,7 +38,10 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
-  background: var(--bg-background);
+  background: var(--color-background);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 a {
