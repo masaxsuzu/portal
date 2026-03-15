@@ -27,20 +27,17 @@ const AppContext = createContext<AppContextType>({
 });
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
-  const [lang, setLang] = useState<Lang>('en');
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    const savedLang = localStorage.getItem('lang') as Lang | null;
-    if (savedTheme === 'dark' || savedTheme === 'light') setTheme(savedTheme);
-    if (savedLang === 'en' || savedLang === 'ja') {
-      setLang(savedLang);
-    } else {
-      const browserLang = navigator.language.toLowerCase();
-      setLang(browserLang.startsWith('ja') ? 'ja' : 'en');
-    }
-  }, []);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark' || saved === 'light' ? saved : 'dark';
+  });
+  const [lang, setLang] = useState<Lang>(() => {
+    if (typeof window === 'undefined') return 'en';
+    const saved = localStorage.getItem('lang');
+    if (saved === 'en' || saved === 'ja') return saved;
+    return navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en';
+  });
 
   useEffect(() => {
     const root = document.documentElement;
