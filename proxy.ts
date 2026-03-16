@@ -1,4 +1,4 @@
-// middleware.ts
+// proxy.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function computeExpectedToken(): Promise<string> {
@@ -11,7 +11,7 @@ export async function computeExpectedToken(): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const authCookie = request.cookies.get('auth');
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
 
