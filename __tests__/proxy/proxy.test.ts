@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { middleware, computeExpectedToken } from '../../middleware';
+import { proxy, computeExpectedToken } from '../../proxy';
 import { NextRequest } from 'next/server';
 
 function makeRequest(path: string, authToken?: string): NextRequest {
@@ -40,7 +40,7 @@ describe('computeExpectedToken', () => {
   });
 });
 
-describe('middleware', () => {
+describe('proxy', () => {
   let validToken: string;
 
   beforeEach(async () => {
@@ -52,14 +52,14 @@ describe('middleware', () => {
   describe('unauthenticated access', () => {
     it('should redirect to /login when no cookie on /', async () => {
       const req = makeRequest('/');
-      const res = await middleware(req);
+      const res = await proxy(req);
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toContain('/login');
     });
 
     it('should allow access to /login without cookie', async () => {
       const req = makeRequest('/login');
-      const res = await middleware(req);
+      const res = await proxy(req);
       expect(res.status).toBe(200);
     });
   });
@@ -67,7 +67,7 @@ describe('middleware', () => {
   describe('invalid cookie', () => {
     it('should redirect to /login and clear cookie when cookie value is wrong', async () => {
       const req = makeRequest('/', 'invalid-token');
-      const res = await middleware(req);
+      const res = await proxy(req);
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toContain('/login');
       expect(res.headers.get('set-cookie')).toContain('auth=;');
@@ -75,7 +75,7 @@ describe('middleware', () => {
 
     it('should redirect to /login when cookie value is "true" (old format)', async () => {
       const req = makeRequest('/', 'true');
-      const res = await middleware(req);
+      const res = await proxy(req);
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toContain('/login');
     });
@@ -84,13 +84,13 @@ describe('middleware', () => {
   describe('authenticated access', () => {
     it('should allow access to / with valid cookie', async () => {
       const req = makeRequest('/', validToken);
-      const res = await middleware(req);
+      const res = await proxy(req);
       expect(res.status).toBe(200);
     });
 
     it('should redirect to / from /login when already authenticated', async () => {
       const req = makeRequest('/login', validToken);
-      const res = await middleware(req);
+      const res = await proxy(req);
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toContain('/');
     });

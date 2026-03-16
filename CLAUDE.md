@@ -46,7 +46,7 @@ npm run format:check  # 再確認
 
 ## Architecture
 
-- **認証**: `middleware.ts` が Cookie (`auth`) を検査し、未認証ユーザーを `/login` にリダイレクト
+- **認証**: `proxy.ts` が Cookie (`auth`) を検査し、未認証ユーザーを `/login` にリダイレクト
 - **コンテンツ**: `pages/data.json` を編集することでページ内容を変更できる
 - **コンポーネント**: `components/` 配下の `About` / `Cards` / `MainCta` / `Divider` が `data.json` の `components` 配列に基づいて動的に描画される
 - **API**: `pages/api/login.ts` がパスワード検証を行い Cookie をセット
@@ -75,9 +75,9 @@ npm run test:watch
 
 ### テスト構成
 
-| ファイル                                  | 内容                        |
-| ----------------------------------------- | --------------------------- |
-| `__tests__/api/login.test.ts`             | ログイン API ユニットテスト |
-| `__tests__/middleware/middleware.test.ts` | middleware ユニットテスト   |
-| `__tests__/components/*.test.tsx`         | 各 UI コンポーネントテスト  |
-| `__tests__/pages/login.test.tsx`          | ログインページテスト        |
+| ファイル                          | 内容                        |
+| --------------------------------- | --------------------------- |
+| `__tests__/api/login.test.ts`     | ログイン API ユニットテスト |
+| `__tests__/proxy/proxy.test.ts`   | proxy ユニットテスト        |
+| `__tests__/components/*.test.tsx` | 各 UI コンポーネントテスト  |
+| `__tests__/pages/login.test.tsx`  | ログインページテスト        |
