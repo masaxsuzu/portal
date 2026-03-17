@@ -1,76 +1,42 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Controls from '../components/Controls';
 import { useAppContext } from '../contexts/AppContext';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const { t } = useAppContext();
-
-  const getValidRedirectPath = (path: unknown): string => {
-    if (typeof path !== 'string') return '/';
-    // Only allow relative paths starting with / and not containing protocol or double slashes
-    if (path.startsWith('/') && !path.startsWith('//') && !path.includes(':')) {
-      return path;
-    }
-    return '/';
-  };
-  const redirectPath = getValidRedirectPath(router.query.redirect);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    });
-
-    setIsLoading(false);
-
-    if (res.ok) {
-      router.push(redirectPath);
-    } else {
-      setError(t.loginError);
-    }
-  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-background">
       <Controls />
-      <form
-        onSubmit={handleSubmit}
-        className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg"
-      >
+      <div className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg text-center">
         <h1 className="text-primary text-2xl text-center mb-2">
           {t.loginTitle}
         </h1>
         <p className="text-primary/50 text-sm text-center mb-6">
           {t.loginSubtext}
         </p>
-        <input
-          type="password"
-          placeholder={t.loginPlaceholder}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={isLoading}
-          className="w-full px-3 py-3 mb-4 rounded bg-background border border-cardborder text-primary placeholder-primary/40 outline-none focus:border-skyblue disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full py-3 rounded bg-skyblue text-background font-semibold disabled:opacity-50"
+        <Link
+          href="/api/auth/github"
+          className="flex items-center justify-center gap-2 w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
         >
-          {isLoading ? t.loginLoading : t.loginButton}
-        </button>
-        {error && (
-          <p className="mt-4 text-sm text-center text-red-400">{error}</p>
-        )}
-      </form>
+          <GitHubIcon />
+          {t.loginButton}
+        </Link>
+      </div>
     </div>
+  );
+}
+
+function GitHubIcon() {
+  return (
+    <svg
+      height="20"
+      width="20"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+    </svg>
   );
 }

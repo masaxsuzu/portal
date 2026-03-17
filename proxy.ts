@@ -1,14 +1,29 @@
-// proxy.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function computeExpectedToken(): Promise<string> {
-  const salt = process.env.SALT ?? '';
-  const password = process.env.PASSWORD ?? '';
+export async function verifySessionToken(token: string): Promise<boolean> {
+  const secret = process.env.SESSION_SECRET ?? '';
+  const dotIndex = token.lastIndexOf('.');
+  if (dotIndex === -1) return false;
+
+  const username = token.slice(0, dotIndex);
+  const signature = token.slice(dotIndex + 1);
+
+  if (!username || !signature) return false;
+
   const encoder = new TextEncoder();
-  const data = encoder.encode(salt + password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['verify']
+  );
+
+  const sigBytes = new Uint8Array(
+    (signature.match(/.{2}/g) ?? []).map((b) => parseInt(b, 16))
+  );
+
+  return crypto.subtle.verify('HMAC', key, sigBytes, encoder.encode(username));
 }
 
 export async function proxy(request: NextRequest) {
@@ -22,8 +37,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const expectedToken = await computeExpectedToken();
-  const isValid = authCookie.value === expectedToken;
+  const isValid = await verifySessionToken(authCookie.value);
 
   if (!isValid) {
     const response = NextResponse.redirect(new URL('/login', request.url));
