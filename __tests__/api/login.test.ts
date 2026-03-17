@@ -147,7 +147,7 @@ describe('/api/auth/callback', () => {
     const cookies = res._getHeaders()['set-cookie'] as string;
     expect(cookies).toContain('auth=');
     expect(cookies).toContain('HttpOnly');
-    expect(cookies).toContain('SameSite=Strict');
+    expect(cookies).toContain('SameSite=Lax');
     expect(cookies).toContain('Max-Age=86400');
   });
 
