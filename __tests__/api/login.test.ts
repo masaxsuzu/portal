@@ -50,7 +50,7 @@ describe('/api/auth/callback', () => {
     jest.resetAllMocks();
   });
 
-  it('should return 400 when code is missing', async () => {
+  it('should redirect to /login?error=missing_code when code is missing', async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'GET',
       query: {},
@@ -58,10 +58,11 @@ describe('/api/auth/callback', () => {
 
     await callbackHandler(req, res);
 
-    expect(res._getStatusCode()).toBe(400);
+    expect(res._getStatusCode()).toBe(302);
+    expect(res._getRedirectUrl()).toBe('/login?error=missing_code');
   });
 
-  it('should return 500 when GitHub credentials are not configured', async () => {
+  it('should redirect to /login?error=not_configured when GitHub credentials are not configured', async () => {
     delete process.env.GITHUB_CLIENT_ID;
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -71,10 +72,11 @@ describe('/api/auth/callback', () => {
 
     await callbackHandler(req, res);
 
-    expect(res._getStatusCode()).toBe(500);
+    expect(res._getStatusCode()).toBe(302);
+    expect(res._getRedirectUrl()).toBe('/login?error=not_configured');
   });
 
-  it('should return 401 when GitHub token exchange fails', async () => {
+  it('should redirect to /login?error=token_failed when GitHub token exchange fails', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       json: async () => ({}),
     });
@@ -86,10 +88,11 @@ describe('/api/auth/callback', () => {
 
     await callbackHandler(req, res);
 
-    expect(res._getStatusCode()).toBe(401);
+    expect(res._getStatusCode()).toBe(302);
+    expect(res._getRedirectUrl()).toBe('/login?error=token_failed');
   });
 
-  it('should return 401 when GitHub user info fetch fails', async () => {
+  it('should redirect to /login?error=user_failed when GitHub user info fetch fails', async () => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         json: async () => ({ access_token: 'test-token' }),
@@ -105,10 +108,11 @@ describe('/api/auth/callback', () => {
 
     await callbackHandler(req, res);
 
-    expect(res._getStatusCode()).toBe(401);
+    expect(res._getStatusCode()).toBe(302);
+    expect(res._getRedirectUrl()).toBe('/login?error=user_failed');
   });
 
-  it('should return 403 when user is not the allowed user', async () => {
+  it('should redirect to /login?error=access_denied when user is not the allowed user', async () => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         json: async () => ({ access_token: 'test-token' }),
@@ -124,7 +128,8 @@ describe('/api/auth/callback', () => {
 
     await callbackHandler(req, res);
 
-    expect(res._getStatusCode()).toBe(403);
+    expect(res._getStatusCode()).toBe(302);
+    expect(res._getRedirectUrl()).toBe('/login?error=access_denied');
   });
 
   it('should set auth cookie and redirect on successful login', async () => {
