@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import { proxy, verifySessionToken } from '../../proxy';
-import { createSessionToken } from '../../pages/api/auth/callback';
+import { createSessionToken } from '../../app/api/auth/callback/route';
 import { NextRequest } from 'next/server';
 
 function makeRequest(path: string, authToken?: string): NextRequest {

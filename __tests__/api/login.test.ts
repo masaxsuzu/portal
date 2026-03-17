@@ -1,9 +1,12 @@
-import { createMocks } from 'node-mocks-http';
-import githubHandler from '../../pages/api/auth/github';
-import callbackHandler, {
+/**
+ * @jest-environment node
+ */
+import { GET as githubHandler } from '../../app/api/auth/github/route';
+import {
+  GET as callbackHandler,
   createSessionToken,
-} from '../../pages/api/auth/callback';
-import { NextApiRequest, NextApiResponse } from 'next';
+} from '../../app/api/auth/callback/route';
+import { NextRequest } from 'next/server';
 
 describe('/api/auth/github', () => {
   beforeEach(() => {
@@ -11,14 +14,10 @@ describe('/api/auth/github', () => {
   });
 
   it('should redirect to GitHub OAuth URL', () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-    });
+    const res = githubHandler();
 
-    githubHandler(req, res);
-
-    expect(res._getStatusCode()).toBe(302);
-    const location = res._getRedirectUrl();
+    expect(res.status).toBe(302);
+    const location = res.headers.get('location');
     expect(location).toContain('https://github.com/login/oauth/authorize');
     expect(location).toContain('client_id=test-client-id');
     expect(location).toContain('scope=read%3Auser');
@@ -27,13 +26,9 @@ describe('/api/auth/github', () => {
   it('should return 500 when GITHUB_CLIENT_ID is not set', () => {
     delete process.env.GITHUB_CLIENT_ID;
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-    });
+    const res = githubHandler();
 
-    githubHandler(req, res);
-
-    expect(res._getStatusCode()).toBe(500);
+    expect(res.status).toBe(500);
   });
 });
 
@@ -50,30 +45,34 @@ describe('/api/auth/callback', () => {
     jest.resetAllMocks();
   });
 
+  function makeCallbackRequest(query?: Record<string, string>) {
+    const url = new URL('http://localhost/api/auth/callback');
+    if (query) {
+      for (const [k, v] of Object.entries(query)) {
+        url.searchParams.set(k, v);
+      }
+    }
+    return new NextRequest(url.toString());
+  }
+
   it('should redirect to /login?error=missing_code when code is missing', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: {},
-    });
+    const req = makeCallbackRequest();
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
-    expect(res._getRedirectUrl()).toBe('/login?error=missing_code');
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login?error=missing_code');
   });
 
   it('should redirect to /login?error=not_configured when GitHub credentials are not configured', async () => {
     delete process.env.GITHUB_CLIENT_ID;
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'test-code' },
-    });
+    const req = makeCallbackRequest({ code: 'test-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
-    expect(res._getRedirectUrl()).toBe('/login?error=not_configured');
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login?error=not_configured');
   });
 
   it('should redirect to /login?error=token_failed when GitHub token exchange fails', async () => {
@@ -81,15 +80,12 @@ describe('/api/auth/callback', () => {
       json: async () => ({}),
     });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'bad-code' },
-    });
+    const req = makeCallbackRequest({ code: 'bad-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
-    expect(res._getRedirectUrl()).toBe('/login?error=token_failed');
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login?error=token_failed');
   });
 
   it('should redirect to /login?error=user_failed when GitHub user info fetch fails', async () => {
@@ -101,15 +97,12 @@ describe('/api/auth/callback', () => {
         json: async () => ({}),
       });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'test-code' },
-    });
+    const req = makeCallbackRequest({ code: 'test-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
-    expect(res._getRedirectUrl()).toBe('/login?error=user_failed');
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login?error=user_failed');
   });
 
   it('should redirect to /login?error=access_denied when user is not the allowed user', async () => {
@@ -121,15 +114,12 @@ describe('/api/auth/callback', () => {
         json: async () => ({ login: 'other-user' }),
       });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'test-code' },
-    });
+    const req = makeCallbackRequest({ code: 'test-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
-    expect(res._getRedirectUrl()).toBe('/login?error=access_denied');
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login?error=access_denied');
   });
 
   it('should set auth cookie and redirect on successful login', async () => {
@@ -141,15 +131,12 @@ describe('/api/auth/callback', () => {
         json: async () => ({ login: 'masaxsuzu' }),
       });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'test-code' },
-    });
+    const req = makeCallbackRequest({ code: 'test-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
-    const cookies = res._getHeaders()['set-cookie'] as string;
+    expect(res.status).toBe(302);
+    const cookies = res.headers.get('set-cookie');
     expect(cookies).toContain('auth=');
     expect(cookies).toContain('HttpOnly');
     expect(cookies).toContain('SameSite=Lax');
@@ -168,14 +155,11 @@ describe('/api/auth/callback', () => {
         json: async () => ({ login: 'masaxsuzu' }),
       });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'test-code' },
-    });
+    const req = makeCallbackRequest({ code: 'test-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getHeaders()['set-cookie']).toContain('Secure');
+    expect(res.headers.get('set-cookie')).toContain('Secure');
 
     (process.env as NodeJS.ProcessEnv).NODE_ENV = originalEnv;
   });
@@ -191,14 +175,11 @@ describe('/api/auth/callback', () => {
         json: async () => ({ login: 'any-user' }),
       });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { code: 'test-code' },
-    });
+    const req = makeCallbackRequest({ code: 'test-code' });
 
-    await callbackHandler(req, res);
+    const res = await callbackHandler(req);
 
-    expect(res._getStatusCode()).toBe(302);
+    expect(res.status).toBe(302);
   });
 });
 

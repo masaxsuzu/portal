@@ -14,9 +14,9 @@ const customJestConfig = {
     '<rootDir>/tests/**/*.test.{js,jsx,ts,tsx}',
   ],
   collectCoverageFrom: [
-    'pages/api/**/*.{js,ts}',
+    'app/api/**/*.{js,ts}',
     'components/**/*.{js,jsx,ts,tsx}',
-    '!pages/api/**/*.d.ts',
+    '!app/api/**/*.d.ts',
     '!components/**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
@@ -31,7 +31,7 @@ const customJestConfig = {
       lines: 80,
       statements: 80,
     },
-    'pages/api/**/*.ts': {
+    'app/api/**/*.ts': {
       branches: 100,
       functions: 100,
       lines: 100,

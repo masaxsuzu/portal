@@ -1,11 +1,13 @@
+'use client';
+
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Controls from '../components/Controls';
-import { useAppContext } from '../contexts/AppContext';
-import type { Translations } from '../lib/i18n';
+import { useSearchParams } from 'next/navigation';
+import Controls from '../../components/Controls';
+import { useAppContext } from '../../contexts/AppContext';
+import type { Translations } from '../../lib/i18n';
 
 function getOAuthErrorMessage(
-  error: string | string[] | undefined,
+  error: string | null,
   t: Translations
 ): string | null {
   switch (error) {
@@ -26,8 +28,8 @@ function getOAuthErrorMessage(
 
 export default function LoginPage() {
   const { t } = useAppContext();
-  const { query } = useRouter();
-  const errorMessage = getOAuthErrorMessage(query.error, t);
+  const searchParams = useSearchParams();
+  const errorMessage = getOAuthErrorMessage(searchParams.get('error'), t);
 
   return (
     <div className="flex justify-center items-center h-screen bg-background">

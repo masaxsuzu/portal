@@ -43,7 +43,6 @@
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
     "jest-environment-node": "^30.3.0",
-    "node-mocks-http": "^1.15.1",
     "postcss": "^8.5.3",
     "prettier": "^3.8.0",
     "supertest": "^7.0.0",

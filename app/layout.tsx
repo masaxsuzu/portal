@@ -1,9 +1,20 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import type { Metadata } from 'next';
+import '../styles/globals.css';
+import { AppProvider } from '../contexts/AppContext';
 
-export default function Document() {
+export const metadata: Metadata = {
+  title: 'masaxsuzu',
+  description: 'Portfolio Website',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <Html>
-      <Head>
+    <html>
+      <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -35,16 +46,16 @@ export default function Document() {
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
+        <link rel="icon" href="/favicon.ico" />
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var t=localStorage.getItem('theme')||'dark';document.documentElement.classList.add(t);}catch(e){}`,
           }}
         />
-      </Head>
+      </head>
       <body>
-        <Main />
-        <NextScript />
+        <AppProvider>{children}</AppProvider>
       </body>
-    </Html>
+    </html>
   );
 }

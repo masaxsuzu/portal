@@ -1,4 +1,5 @@
-import Head from 'next/head';
+'use client';
+
 import data from './data.json';
 import About from '../components/About';
 import MainCta from '../components/MainCta';
@@ -34,11 +35,6 @@ export default function HomePage() {
 
   return (
     <div className="bg-background flex justify-center w-full">
-      <Head>
-        <title>{data?.title}</title>
-        <meta name="description" content={data?.siteDescription} />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Controls />
       <div className="my-10  text-primary max-w-[1024px] flex flex-col items-start px-6">
         {data?.components?.map((item, idx) => {

@@ -1,3 +1,5 @@
+'use client';
+
 import { useAppContext } from '../contexts/AppContext';
 
 export default function Controls() {
