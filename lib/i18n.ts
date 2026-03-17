@@ -13,6 +13,11 @@ export const translations = {
     loginButton: 'Enter',
     loginLoading: 'Loading...',
     loginError: 'Password is incorrect',
+    oauthErrorMissingCode: 'OAuth error: missing code',
+    oauthErrorNotConfigured: 'OAuth error: server not configured',
+    oauthErrorTokenFailed: 'OAuth error: failed to get access token',
+    oauthErrorUserFailed: 'OAuth error: failed to get user info',
+    oauthErrorAccessDenied: 'Access denied',
   },
   ja: {
     mainCtaBio: 'ソフトウェアエンジニア | C# | フィットネス愛好家',
@@ -26,6 +31,11 @@ export const translations = {
     loginButton: '入る',
     loginLoading: '読み込み中...',
     loginError: 'パスワードが正しくありません',
+    oauthErrorMissingCode: 'OAuth エラー: コードが見つかりません',
+    oauthErrorNotConfigured: 'OAuth エラー: サーバーが未設定です',
+    oauthErrorTokenFailed: 'OAuth エラー: アクセストークンの取得に失敗しました',
+    oauthErrorUserFailed: 'OAuth エラー: ユーザー情報の取得に失敗しました',
+    oauthErrorAccessDenied: 'アクセスが拒否されました',
   },
 } as const;
 

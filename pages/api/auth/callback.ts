@@ -17,7 +17,8 @@ export default async function handler(
 ) {
   const { code } = req.query;
   if (!code || typeof code !== 'string') {
-    return res.status(400).json({ error: 'Missing code' });
+    console.error('[auth/callback] Missing code in query');
+    return res.redirect('/login?error=missing_code');
   }
 
   const clientId = process.env.GITHUB_CLIENT_ID;
@@ -25,7 +26,8 @@ export default async function handler(
   const allowedUser = process.env.GITHUB_ALLOWED_USER;
 
   if (!clientId || !clientSecret) {
-    return res.status(500).json({ error: 'GitHub OAuth not configured' });
+    console.error('[auth/callback] GitHub OAuth env vars not configured');
+    return res.redirect('/login?error=not_configured');
   }
 
   const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
@@ -41,11 +43,20 @@ export default async function handler(
     }),
   });
 
-  const tokenData = (await tokenRes.json()) as { access_token?: string };
+  const tokenData = (await tokenRes.json()) as {
+    access_token?: string;
+    error?: string;
+    error_description?: string;
+  };
   const accessToken = tokenData.access_token;
 
   if (!accessToken) {
-    return res.status(401).json({ error: 'Failed to get access token' });
+    console.error(
+      '[auth/callback] Failed to get access token:',
+      tokenData.error,
+      tokenData.error_description
+    );
+    return res.redirect('/login?error=token_failed');
   }
 
   const userRes = await fetch('https://api.github.com/user', {
@@ -59,11 +70,13 @@ export default async function handler(
   const username = userData.login;
 
   if (!username) {
-    return res.status(401).json({ error: 'Failed to get user info' });
+    console.error('[auth/callback] Failed to get user info from GitHub API');
+    return res.redirect('/login?error=user_failed');
   }
 
   if (allowedUser && username !== allowedUser) {
-    return res.status(403).json({ error: 'Access denied' });
+    console.error(`[auth/callback] Access denied for user: ${username}`);
+    return res.redirect('/login?error=access_denied');
   }
 
   const sessionToken = createSessionToken(username);

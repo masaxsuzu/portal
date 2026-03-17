@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 import LoginPage from '../../pages/login';
 import { AppProvider } from '../../contexts/AppContext';
 
+jest.mock('next/router', () => ({
+  useRouter: () => ({ query: {} }),
+}));
+
 describe('LoginPage', () => {
   let container: HTMLDivElement;
 

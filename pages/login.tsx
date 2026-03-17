@@ -1,9 +1,33 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Controls from '../components/Controls';
 import { useAppContext } from '../contexts/AppContext';
+import type { Translations } from '../lib/i18n';
+
+function getOAuthErrorMessage(
+  error: string | string[] | undefined,
+  t: Translations
+): string | null {
+  switch (error) {
+    case 'missing_code':
+      return t.oauthErrorMissingCode;
+    case 'not_configured':
+      return t.oauthErrorNotConfigured;
+    case 'token_failed':
+      return t.oauthErrorTokenFailed;
+    case 'user_failed':
+      return t.oauthErrorUserFailed;
+    case 'access_denied':
+      return t.oauthErrorAccessDenied;
+    default:
+      return null;
+  }
+}
 
 export default function LoginPage() {
   const { t } = useAppContext();
+  const { query } = useRouter();
+  const errorMessage = getOAuthErrorMessage(query.error, t);
 
   return (
     <div className="flex justify-center items-center h-screen bg-background">
@@ -15,6 +39,9 @@ export default function LoginPage() {
         <p className="text-primary/50 text-sm text-center mb-6">
           {t.loginSubtext}
         </p>
+        {errorMessage && (
+          <p className="text-red-400 text-sm mb-4">{errorMessage}</p>
+        )}
         <Link
           href="/api/auth/github"
           className="flex items-center justify-center gap-2 w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
