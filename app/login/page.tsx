@@ -34,9 +34,7 @@ function LoginContent() {
 
   return (
     <div className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg text-center">
-      <h1 className="text-primary text-2xl text-center mb-2">
-        {t.loginTitle}
-      </h1>
+      <h1 className="text-primary text-2xl text-center mb-2">{t.loginTitle}</h1>
       <p className="text-primary/50 text-sm text-center mb-6">
         {t.loginSubtext}
       </p>

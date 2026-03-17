@@ -79,10 +79,9 @@ export async function GET(req: NextRequest) {
 
   if (!username) {
     console.error('[auth/callback] Failed to get user info from GitHub API');
-    return NextResponse.redirect(
-      new URL('/login?error=user_failed', req.url),
-      { status: 302 }
-    );
+    return NextResponse.redirect(new URL('/login?error=user_failed', req.url), {
+      status: 302,
+    });
   }
 
   if (allowedUser && username !== allowedUser) {

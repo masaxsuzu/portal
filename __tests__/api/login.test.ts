@@ -72,7 +72,9 @@ describe('/api/auth/callback', () => {
     const res = await callbackHandler(req);
 
     expect(res.status).toBe(302);
-    expect(res.headers.get('location')).toContain('/login?error=not_configured');
+    expect(res.headers.get('location')).toContain(
+      '/login?error=not_configured'
+    );
   });
 
   it('should redirect to /login?error=token_failed when GitHub token exchange fails', async () => {
