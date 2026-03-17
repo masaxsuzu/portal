@@ -1,63 +1,74 @@
-/**
- * Tests for open redirect vulnerability protection in login page
- */
+import React, { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import LoginPage from '../../pages/login';
+import { AppProvider } from '../../contexts/AppContext';
 
-// Extract the validation logic for testing
-const getValidRedirectPath = (path: unknown): string => {
-  if (typeof path !== 'string') return '/';
-  // Only allow relative paths starting with / and not containing protocol or double slashes
-  if (path.startsWith('/') && !path.startsWith('//') && !path.includes(':')) {
-    return path;
-  }
-  return '/';
-};
+describe('LoginPage', () => {
+  let container: HTMLDivElement;
 
-describe('Login redirect validation', () => {
-  describe('getValidRedirectPath', () => {
-    it('should return "/" for non-string inputs', () => {
-      expect(getValidRedirectPath(undefined)).toBe('/');
-      expect(getValidRedirectPath(null)).toBe('/');
-      expect(getValidRedirectPath(123)).toBe('/');
-      expect(getValidRedirectPath({})).toBe('/');
-      expect(getValidRedirectPath([])).toBe('/');
-    });
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    localStorage.clear();
+  });
 
-    it('should allow valid relative paths', () => {
-      expect(getValidRedirectPath('/')).toBe('/');
-      expect(getValidRedirectPath('/dashboard')).toBe('/dashboard');
-      expect(getValidRedirectPath('/user/profile')).toBe('/user/profile');
-      expect(getValidRedirectPath('/page?query=value')).toBe(
-        '/page?query=value'
+  afterEach(() => {
+    document.body.removeChild(container);
+    localStorage.clear();
+  });
+
+  function renderLogin() {
+    const root = createRoot(container);
+    act(() => {
+      root.render(
+        <AppProvider>
+          <LoginPage />
+        </AppProvider>
       );
     });
+    return root;
+  }
 
-    it('should block protocol-relative URLs (open redirect attack)', () => {
-      expect(getValidRedirectPath('//evil.com')).toBe('/');
-      expect(getValidRedirectPath('//evil.com/path')).toBe('/');
+  it('renders GitHub login link pointing to /api/auth/github', () => {
+    const root = renderLogin();
+
+    const link = container.querySelector('a[href="/api/auth/github"]');
+    expect(link).not.toBeNull();
+
+    act(() => {
+      root.unmount();
     });
+  });
 
-    it('should block URLs with protocols (open redirect attack)', () => {
-      expect(getValidRedirectPath('https://evil.com')).toBe('/');
-      expect(getValidRedirectPath('http://evil.com')).toBe('/');
-      expect(getValidRedirectPath('javascript:alert(1)')).toBe('/');
-      expect(
-        getValidRedirectPath('data:text/html,<script>alert(1)</script>')
-      ).toBe('/');
+  it('renders the GitHub SVG icon inside the login link', () => {
+    const root = renderLogin();
+
+    const link = container.querySelector('a[href="/api/auth/github"]');
+    expect(link?.querySelector('svg')).not.toBeNull();
+
+    act(() => {
+      root.unmount();
     });
+  });
 
-    it('should block paths with embedded protocols', () => {
-      expect(getValidRedirectPath('/redirect?url=https://evil.com')).toBe('/');
-      expect(getValidRedirectPath('/path:with:colons')).toBe('/');
+  it('renders heading and subtext', () => {
+    const root = renderLogin();
+
+    expect(container.querySelector('h1')?.textContent).toBeTruthy();
+    expect(container.querySelector('p')?.textContent).toBeTruthy();
+
+    act(() => {
+      root.unmount();
     });
+  });
 
-    it('should block paths not starting with /', () => {
-      expect(getValidRedirectPath('evil.com')).toBe('/');
-      expect(getValidRedirectPath('../parent')).toBe('/');
-      expect(getValidRedirectPath('relative/path')).toBe('/');
-    });
+  it('does not render a password input', () => {
+    const root = renderLogin();
 
-    it('should block empty string', () => {
-      expect(getValidRedirectPath('')).toBe('/');
+    expect(container.querySelector('input[type="password"]')).toBeNull();
+
+    act(() => {
+      root.unmount();
     });
   });
 });

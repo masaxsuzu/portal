@@ -1,7 +1,8 @@
 /**
  * @jest-environment node
  */
-import { proxy, computeExpectedToken } from '../../proxy';
+import { proxy, verifySessionToken } from '../../proxy';
+import { createSessionToken } from '../../pages/api/auth/callback';
 import { NextRequest } from 'next/server';
 
 function makeRequest(path: string, authToken?: string): NextRequest {
@@ -12,41 +13,43 @@ function makeRequest(path: string, authToken?: string): NextRequest {
   return new NextRequest(`http://localhost${path}`, { headers });
 }
 
-describe('computeExpectedToken', () => {
+describe('verifySessionToken', () => {
   beforeEach(() => {
-    process.env.PASSWORD = 'test-password';
-    process.env.SALT = 'test-salt';
+    process.env.SESSION_SECRET = 'test-secret';
   });
 
-  it('should return a 64-character hex string (SHA-256)', async () => {
-    const token = await computeExpectedToken();
-    expect(token).toMatch(/^[0-9a-f]{64}$/);
+  it('should return true for a valid token', async () => {
+    const token = createSessionToken('masaxsuzu');
+    expect(await verifySessionToken(token)).toBe(true);
   });
 
-  it('should produce different tokens for different salts', async () => {
-    process.env.SALT = 'salt-a';
-    const tokenA = await computeExpectedToken();
-    process.env.SALT = 'salt-b';
-    const tokenB = await computeExpectedToken();
-    expect(tokenA).not.toBe(tokenB);
+  it('should return false for a tampered token', async () => {
+    const token = createSessionToken('masaxsuzu');
+    const tampered = token.slice(0, -4) + 'ffff';
+    expect(await verifySessionToken(tampered)).toBe(false);
   });
 
-  it('should produce different tokens for different passwords', async () => {
-    process.env.PASSWORD = 'password-a';
-    const tokenA = await computeExpectedToken();
-    process.env.PASSWORD = 'password-b';
-    const tokenB = await computeExpectedToken();
-    expect(tokenA).not.toBe(tokenB);
+  it('should return false for a token without a dot separator', async () => {
+    expect(await verifySessionToken('nodottoken')).toBe(false);
+  });
+
+  it('should return false for an empty string', async () => {
+    expect(await verifySessionToken('')).toBe(false);
+  });
+
+  it('should return false when secret differs', async () => {
+    const token = createSessionToken('masaxsuzu');
+    process.env.SESSION_SECRET = 'different-secret';
+    expect(await verifySessionToken(token)).toBe(false);
   });
 });
 
 describe('proxy', () => {
   let validToken: string;
 
-  beforeEach(async () => {
-    process.env.PASSWORD = 'test-password';
-    process.env.SALT = 'test-salt';
-    validToken = await computeExpectedToken();
+  beforeEach(() => {
+    process.env.SESSION_SECRET = 'test-secret';
+    validToken = createSessionToken('masaxsuzu');
   });
 
   describe('unauthenticated access', () => {

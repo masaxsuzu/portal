@@ -7,13 +7,6 @@ import { createRoot } from 'react-dom/client';
 import LoginPage from '../../pages/login';
 import { AppProvider } from '../../contexts/AppContext';
 
-jest.mock('next/router', () => ({
-  useRouter: () => ({
-    query: {},
-    push: jest.fn(),
-  }),
-}));
-
 describe('LoginPage i18n integration', () => {
   let container: HTMLDivElement;
 
@@ -48,13 +41,8 @@ describe('LoginPage i18n integration', () => {
       "masaxsuzu's private portfolio"
     );
     expect(
-      container
-        .querySelector('input[type="password"]')
-        ?.getAttribute('placeholder')
-    ).toBe('Password');
-    expect(container.querySelector('button[type="submit"]')?.textContent).toBe(
-      'Enter'
-    );
+      container.querySelector('a[href="/api/auth/github"]')
+    ).not.toBeNull();
 
     act(() => {
       root.unmount();
@@ -70,26 +58,21 @@ describe('LoginPage i18n integration', () => {
       'masaxsuzu のプライベートポートフォリオです'
     );
     expect(
-      container
-        .querySelector('input[type="password"]')
-        ?.getAttribute('placeholder')
-    ).toBe('パスワード');
-    expect(container.querySelector('button[type="submit"]')?.textContent).toBe(
-      '入る'
-    );
+      container.querySelector('a[href="/api/auth/github"]')
+    ).not.toBeNull();
 
     act(() => {
       root.unmount();
     });
   });
 
-  it('updates login text when language is toggled via Controls', () => {
+  it('updates heading when language is toggled via Controls', () => {
     const root = renderLogin();
 
     // Starts in English
     expect(container.querySelector('h1')?.textContent).toBe('Welcome');
 
-    // Click language toggle (shows "JA" when current lang is "en")
+    // Click language toggle
     const langBtn = container.querySelector(
       '[aria-label="Toggle language"]'
     ) as HTMLButtonElement;
@@ -99,11 +82,6 @@ describe('LoginPage i18n integration', () => {
 
     // Now Japanese
     expect(container.querySelector('h1')?.textContent).toBe('ようこそ');
-    expect(
-      container
-        .querySelector('input[type="password"]')
-        ?.getAttribute('placeholder')
-    ).toBe('パスワード');
 
     // Toggle back to English
     act(() => {
@@ -111,45 +89,6 @@ describe('LoginPage i18n integration', () => {
     });
 
     expect(container.querySelector('h1')?.textContent).toBe('Welcome');
-
-    act(() => {
-      root.unmount();
-    });
-  });
-
-  it('shows English error message after failed login (default lang)', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false });
-    const root = renderLogin();
-
-    const form = container.querySelector('form') as HTMLFormElement;
-    await act(async () => {
-      form.dispatchEvent(
-        new Event('submit', { bubbles: true, cancelable: true })
-      );
-    });
-
-    const errorEl = container.querySelector('p.text-red-400');
-    expect(errorEl?.textContent).toBe('Password is incorrect');
-
-    act(() => {
-      root.unmount();
-    });
-  });
-
-  it('shows Japanese error message after failed login when lang=ja', async () => {
-    localStorage.setItem('lang', 'ja');
-    global.fetch = jest.fn().mockResolvedValue({ ok: false });
-    const root = renderLogin();
-
-    const form = container.querySelector('form') as HTMLFormElement;
-    await act(async () => {
-      form.dispatchEvent(
-        new Event('submit', { bubbles: true, cancelable: true })
-      );
-    });
-
-    const errorEl = container.querySelector('p.text-red-400');
-    expect(errorEl?.textContent).toBe('パスワードが正しくありません');
 
     act(() => {
       root.unmount();
