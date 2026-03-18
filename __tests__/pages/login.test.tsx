@@ -7,10 +7,7 @@ let mockErrorCode: string | null = null;
 
 jest.mock('next/navigation', () => ({
   useSearchParams: () =>
-    new URLSearchParams(
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      mockErrorCode ? `error=${mockErrorCode}` : ''
-    ),
+    new URLSearchParams(mockErrorCode ? `error=${mockErrorCode}` : ''),
 }));
 
 describe('LoginPage', () => {

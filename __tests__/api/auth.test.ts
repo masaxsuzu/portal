@@ -223,7 +223,7 @@ describe('/api/auth/callback', () => {
     (process.env as NodeJS.ProcessEnv).NODE_ENV = originalEnv;
   });
 
-  it('should allow any user when GITHUB_ALLOWED_USER is not set', async () => {
+  it('should deny any user when GITHUB_ALLOWED_USER is not set', async () => {
     delete process.env.GITHUB_ALLOWED_USER;
 
     (global.fetch as jest.Mock)
@@ -239,6 +239,7 @@ describe('/api/auth/callback', () => {
     const res = await callbackHandler(req);
 
     expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login?error=access_denied');
   });
 });
 
