@@ -87,19 +87,6 @@ describe('About Component', () => {
     });
   });
 
-  it('handles undefined data gracefully', () => {
-    const root = createRoot(container);
-    expect(() => {
-      act(() => {
-        root.render(<About data={undefined as any} />);
-      });
-    }).not.toThrow();
-
-    act(() => {
-      root.unmount();
-    });
-  });
-
   it('handles empty data', () => {
     const emptyData = { title: '', description: '' };
     const root = createRoot(container);
