@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function verifySessionToken(token: string): Promise<boolean> {
-  const secret = process.env.SESSION_SECRET ?? '';
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) return false;
   const dotIndex = token.lastIndexOf('.');
   if (dotIndex === -1) return false;
 

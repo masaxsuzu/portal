@@ -64,13 +64,14 @@ describe('Auth flow integration', () => {
         });
 
       const req = new NextRequest(
-        'http://localhost/api/auth/callback?code=test-code'
+        'http://localhost/api/auth/callback?code=test-code&state=test-state',
+        { headers: { cookie: 'oauth_state=test-state' } }
       );
       const res = await callbackHandler(req);
       expect(res.status).toBe(302);
 
       // Step 2: extract auth token from the Set-Cookie header
-      const setCookie = res.headers.get('set-cookie');
+      const setCookie = res.headers.getSetCookie().join('\n');
       const tokenMatch = setCookie?.match(/auth=([^;]+)/);
       expect(tokenMatch).not.toBeNull();
       const token = tokenMatch![1];
