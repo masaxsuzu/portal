@@ -55,7 +55,9 @@ describe('HomePage', () => {
 
   it('renders all 4 cards from data.json', () => {
     const root = renderHome();
-    const links = container.querySelectorAll('a[href^="https://github.com/masaxsuzu"]');
+    const links = container.querySelectorAll(
+      'a[href^="https://github.com/masaxsuzu"]'
+    );
     expect(links).toHaveLength(4);
     act(() => root.unmount());
   });
