@@ -8,15 +8,22 @@
  * 一部は修正済みの脆弱性（SESSION_SECRET 漏洩時の allowlist バイパス）の
  * 回帰テストとして機能する。
  */
-import { createSessionToken, GET as callbackGET } from '../../app/api/auth/callback/route';
+import {
+  createSessionToken,
+  GET as callbackGET,
+} from '../../app/api/auth/callback/route';
 import { proxy } from '../../proxy';
 import { NextRequest } from 'next/server';
 
-function makeCallbackRequest(params: Record<string, string>, stateCookie?: string): NextRequest {
+function makeCallbackRequest(
+  params: Record<string, string>,
+  stateCookie?: string
+): NextRequest {
   const url = new URL('http://localhost/api/auth/callback');
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   const headers: Record<string, string> = {};
-  if (stateCookie !== undefined) headers['cookie'] = `oauth_state=${stateCookie}`;
+  if (stateCookie !== undefined)
+    headers['cookie'] = `oauth_state=${stateCookie}`;
   return new NextRequest(url.toString(), { headers });
 }
 
@@ -170,7 +177,10 @@ describe('Attack: CSRF（OAuth state 不一致）', () => {
   });
 
   it('[SAFE] oauth_state Cookie がない場合は拒否される', async () => {
-    const req = makeCallbackRequest({ code: 'some-code', state: 'legit-state' });
+    const req = makeCallbackRequest({
+      code: 'some-code',
+      state: 'legit-state',
+    });
     const res = await callbackGET(req);
     expect(res.status).toBe(302);
     expect(res.headers.get('location')).toContain('state_mismatch');
