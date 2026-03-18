@@ -5,12 +5,7 @@ interface CardProps {
   titleTextClass: 'text-csharp' | 'text-c' | 'text-rust' | 'text-ts';
 }
 
-function Card({
-  title,
-  url,
-  description,
-  titleTextClass,
-}: CardProps) {
+function Card({ title, url, description, titleTextClass }: CardProps) {
   return (
     <div className="bg-cardbg flex flex-col border-2 border-cardborder py-4 px-8 rounded-2xl my-4 w-full sm:w-[360px] md:w-[320px] lg:w-[225px] xl:w-[200px] sm:mr-4 shadow-md shadow-cardbg">
       <div className="flex justify-between relative">
