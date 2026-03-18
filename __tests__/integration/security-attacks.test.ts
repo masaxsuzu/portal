@@ -52,7 +52,12 @@ describe('Attack: SESSION_SECRET 漏洩による allowlist バイパス', () => 
   });
 
   it('[VULN] 管理者以外の任意のユーザー名でトークンを偽造できる', async () => {
-    const candidates = ['admin', 'root', 'github-actions-bot', 'masaxsuzu-evil'];
+    const candidates = [
+      'admin',
+      'root',
+      'github-actions-bot',
+      'masaxsuzu-evil',
+    ];
 
     for (const username of candidates) {
       const forgedToken = createSessionToken(username);
