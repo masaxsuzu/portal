@@ -5,19 +5,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import HomePage from '../../app/page';
-import { AppProvider, useAppContext } from '../../contexts/AppContext';
-
-// Controls uses FontAwesome icons — stub it out to avoid icon rendering issues
-jest.mock('../../components/Controls', () => () => {
-  const { useAppContext: useCtx } = require('../../contexts/AppContext');
-  const { toggleLang, toggleTheme } = useCtx();
-  return (
-    <>
-      <button aria-label="Toggle language" onClick={toggleLang} />
-      <button aria-label="Toggle theme" onClick={toggleTheme} />
-    </>
-  );
-});
+import { AppProvider } from '../../contexts/AppContext';
 
 describe('HomePage i18n integration', () => {
   let container: HTMLDivElement;

@@ -60,8 +60,7 @@ describe('AppContext', () => {
     });
 
     it('adds dark class to documentElement in dark mode', () => {
-      let ctx!: ReturnType<typeof useAppContext>;
-      const { root, container } = renderProvider((c) => (ctx = c));
+      const { root, container } = renderProvider(() => {});
       expect(document.documentElement.classList.contains('dark')).toBe(true);
       expect(document.documentElement.classList.contains('light')).toBe(false);
       act(() => root.unmount());
