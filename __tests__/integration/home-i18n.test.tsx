@@ -97,6 +97,33 @@ describe('HomePage i18n integration', () => {
     act(() => root.unmount());
   });
 
+  it('defaults to ja when navigator.language is Japanese and no localStorage', () => {
+    const original = navigator.language;
+    Object.defineProperty(navigator, 'language', {
+      value: 'ja-JP',
+      configurable: true,
+    });
+    const root = renderHome();
+
+    expect(container.textContent).toContain('自己紹介');
+
+    act(() => root.unmount());
+    Object.defineProperty(navigator, 'language', {
+      value: original,
+      configurable: true,
+    });
+  });
+
+  it('restores light theme from localStorage on mount', () => {
+    localStorage.setItem('theme', 'light');
+    const root = renderHome();
+
+    expect(document.documentElement.classList.contains('light')).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+    act(() => root.unmount());
+  });
+
   it('toggles to light theme and updates documentElement class', () => {
     const root = renderHome();
 
