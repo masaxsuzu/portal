@@ -18,29 +18,43 @@ describe('verifySessionToken', () => {
     process.env.SESSION_SECRET = 'test-secret';
   });
 
-  it('should return true for a valid token', async () => {
-    const token = createSessionToken('masaxsuzu');
-    expect(await verifySessionToken(token)).toBe(true);
+  describe('without allowedUser (GITHUB_ALLOWED_USER 未設定)', () => {
+    it('should return true for a valid token', async () => {
+      const token = createSessionToken('masaxsuzu');
+      expect(await verifySessionToken(token)).toBe(true);
+    });
+
+    it('should return false for a tampered token', async () => {
+      const token = createSessionToken('masaxsuzu');
+      const tampered = token.slice(0, -4) + 'ffff';
+      expect(await verifySessionToken(tampered)).toBe(false);
+    });
+
+    it('should return false for a token without a dot separator', async () => {
+      expect(await verifySessionToken('nodottoken')).toBe(false);
+    });
+
+    it('should return false for an empty string', async () => {
+      expect(await verifySessionToken('')).toBe(false);
+    });
+
+    it('should return false when secret differs', async () => {
+      const token = createSessionToken('masaxsuzu');
+      process.env.SESSION_SECRET = 'different-secret';
+      expect(await verifySessionToken(token)).toBe(false);
+    });
   });
 
-  it('should return false for a tampered token', async () => {
-    const token = createSessionToken('masaxsuzu');
-    const tampered = token.slice(0, -4) + 'ffff';
-    expect(await verifySessionToken(tampered)).toBe(false);
-  });
+  describe('with allowedUser (GITHUB_ALLOWED_USER 設定済み)', () => {
+    it('should return true when username matches allowedUser', async () => {
+      const token = createSessionToken('masaxsuzu');
+      expect(await verifySessionToken(token, 'masaxsuzu')).toBe(true);
+    });
 
-  it('should return false for a token without a dot separator', async () => {
-    expect(await verifySessionToken('nodottoken')).toBe(false);
-  });
-
-  it('should return false for an empty string', async () => {
-    expect(await verifySessionToken('')).toBe(false);
-  });
-
-  it('should return false when secret differs', async () => {
-    const token = createSessionToken('masaxsuzu');
-    process.env.SESSION_SECRET = 'different-secret';
-    expect(await verifySessionToken(token)).toBe(false);
+    it('should return false when username does not match allowedUser', async () => {
+      const token = createSessionToken('masaxsuzu');
+      expect(await verifySessionToken(token, 'otheruser')).toBe(false);
+    });
   });
 });
 
@@ -96,6 +110,30 @@ describe('proxy', () => {
       const res = await proxy(req);
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toContain('/');
+    });
+  });
+
+  describe('GITHUB_ALLOWED_USER 設定時', () => {
+    beforeEach(() => {
+      process.env.GITHUB_ALLOWED_USER = 'masaxsuzu';
+    });
+
+    afterEach(() => {
+      delete process.env.GITHUB_ALLOWED_USER;
+    });
+
+    it('should allow access when username matches GITHUB_ALLOWED_USER', async () => {
+      const req = makeRequest('/', validToken);
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should deny access when token is for a different user', async () => {
+      const otherToken = createSessionToken('otheruser');
+      const req = makeRequest('/', otherToken);
+      const res = await proxy(req);
+      expect(res.status).toBe(307);
+      expect(res.headers.get('location')).toContain('/login');
     });
   });
 });
