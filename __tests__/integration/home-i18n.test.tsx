@@ -36,7 +36,9 @@ describe('HomePage i18n integration', () => {
   it('renders English bio and section titles by default', () => {
     const root = renderHome();
 
-    expect(container.textContent).toContain('Software Engineer | C# | Fitness enthusiast');
+    expect(container.textContent).toContain(
+      'Software Engineer | C# | Fitness enthusiast'
+    );
     expect(container.textContent).toContain('About Me');
     expect(container.textContent).toContain('Public Content');
 
@@ -47,7 +49,9 @@ describe('HomePage i18n integration', () => {
     localStorage.setItem('lang', 'ja');
     const root = renderHome();
 
-    expect(container.textContent).toContain('ソフトウェアエンジニア | C# | フィットネス愛好家');
+    expect(container.textContent).toContain(
+      'ソフトウェアエンジニア | C# | フィットネス愛好家'
+    );
     expect(container.textContent).toContain('自己紹介');
     expect(container.textContent).toContain('公開コンテンツ');
 
@@ -59,16 +63,22 @@ describe('HomePage i18n integration', () => {
 
     expect(container.textContent).toContain('About Me');
 
-    const langBtn = container.querySelector('[aria-label="Toggle language"]') as HTMLButtonElement;
+    const langBtn = container.querySelector(
+      '[aria-label="Toggle language"]'
+    ) as HTMLButtonElement;
     act(() => langBtn.click());
 
     expect(container.textContent).toContain('自己紹介');
-    expect(container.textContent).toContain('ソフトウェアエンジニア | C# | フィットネス愛好家');
+    expect(container.textContent).toContain(
+      'ソフトウェアエンジニア | C# | フィットネス愛好家'
+    );
 
     act(() => langBtn.click());
 
     expect(container.textContent).toContain('About Me');
-    expect(container.textContent).toContain('Software Engineer | C# | Fitness enthusiast');
+    expect(container.textContent).toContain(
+      'Software Engineer | C# | Fitness enthusiast'
+    );
 
     act(() => root.unmount());
   });
@@ -77,7 +87,9 @@ describe('HomePage i18n integration', () => {
     const root = renderHome();
     expect(container.textContent).toContain('masaxsuzu');
 
-    const langBtn = container.querySelector('[aria-label="Toggle language"]') as HTMLButtonElement;
+    const langBtn = container.querySelector(
+      '[aria-label="Toggle language"]'
+    ) as HTMLButtonElement;
     act(() => langBtn.click());
 
     expect(container.textContent).toContain('masaxsuzu');

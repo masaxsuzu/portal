@@ -16,7 +16,9 @@ function Consumer({
   return null;
 }
 
-function renderProvider(onRender: (ctx: ReturnType<typeof useAppContext>) => void) {
+function renderProvider(
+  onRender: (ctx: ReturnType<typeof useAppContext>) => void
+) {
   const container = document.createElement('div');
   document.body.appendChild(container);
   const root = createRoot(container);
