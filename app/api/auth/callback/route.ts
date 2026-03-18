@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { serialize } from 'cookie';
 import crypto from 'crypto';
 
 export function createSessionToken(username: string): string {
-  const secret = process.env.SESSION_SECRET ?? '';
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    throw new Error('SESSION_SECRET is not configured');
+  }
   const hmac = crypto
     .createHmac('sha256', secret)
     .update(username)
@@ -13,6 +15,26 @@ export function createSessionToken(username: string): string {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    console.error('[auth/callback] SESSION_SECRET is not configured');
+    return NextResponse.redirect(
+      new URL('/login?error=not_configured', req.url),
+      { status: 302 }
+    );
+  }
+
+  const state = searchParams.get('state');
+  const storedState = req.cookies.get('oauth_state')?.value;
+  if (!state || !storedState || state !== storedState) {
+    console.error('[auth/callback] OAuth state mismatch');
+    return NextResponse.redirect(
+      new URL('/login?error=state_mismatch', req.url),
+      { status: 302 }
+    );
+  }
+
   const code = searchParams.get('code');
 
   if (!code) {
@@ -56,11 +78,7 @@ export async function GET(req: NextRequest) {
   const accessToken = tokenData.access_token;
 
   if (!accessToken) {
-    console.error(
-      '[auth/callback] Failed to get access token:',
-      tokenData.error,
-      tokenData.error_description
-    );
+    console.error('[auth/callback] Failed to get access token');
     return NextResponse.redirect(
       new URL('/login?error=token_failed', req.url),
       { status: 302 }
@@ -93,17 +111,17 @@ export async function GET(req: NextRequest) {
   }
 
   const sessionToken = createSessionToken(username);
-  const cookie = serialize('auth', sessionToken, {
+
+  const response = NextResponse.redirect(new URL('/', req.url), {
+    status: 302,
+  });
+  response.cookies.set('auth', sessionToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24,
   });
-
-  const response = NextResponse.redirect(new URL('/', req.url), {
-    status: 302,
-  });
-  response.headers.set('Set-Cookie', cookie);
+  response.cookies.set('oauth_state', '', { maxAge: 0, path: '/' });
   return response;
 }
