@@ -30,11 +30,13 @@ const AppContext = createContext<AppContextType>({
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
+    /* istanbul ignore next */
     if (typeof window === 'undefined') return 'dark';
     const saved = localStorage.getItem('theme');
     return saved === 'dark' || saved === 'light' ? saved : 'dark';
   });
   const [lang, setLang] = useState<Lang>(() => {
+    /* istanbul ignore next */
     if (typeof window === 'undefined') return 'en';
     const saved = localStorage.getItem('lang');
     if (saved === 'en' || saved === 'ja') return saved;

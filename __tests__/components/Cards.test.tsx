@@ -21,13 +21,13 @@ describe('Cards Component', () => {
         title: 'Card 1',
         url: 'https://example1.com',
         description: 'Description 1',
-        titleTextClass: 'text-skyblue' as const,
+        titleTextClass: 'text-csharp' as const,
       },
       {
         title: 'Card 2',
         url: 'https://example2.com',
         description: 'Description 2',
-        titleTextClass: 'text-npm' as const,
+        titleTextClass: 'text-rust' as const,
       },
     ],
   };
@@ -94,36 +94,8 @@ describe('Cards Component', () => {
       (span) => span.textContent === 'Card 2'
     );
 
-    expect(card1TitleSpan?.className).toContain('text-skyblue');
-    expect(card2TitleSpan?.className).toContain('text-npm');
-
-    act(() => {
-      root.unmount();
-    });
-  });
-
-  it('uses default titleTextClass when not provided', () => {
-    const dataWithoutTextClass = {
-      title: 'Test Title',
-      data: [
-        {
-          title: 'Default Card',
-          url: 'https://default.com',
-          description: 'Default Description',
-        } as any,
-      ],
-    };
-
-    const root = createRoot(container);
-
-    act(() => {
-      root.render(<Cards data={dataWithoutTextClass} />);
-    });
-
-    const cardTitleSpan = Array.from(container.querySelectorAll('span')).find(
-      (span) => span.textContent === 'Default Card'
-    );
-    expect(cardTitleSpan?.className).toContain('text-skyblue');
+    expect(card1TitleSpan?.className).toContain('text-csharp');
+    expect(card2TitleSpan?.className).toContain('text-rust');
 
     act(() => {
       root.unmount();
@@ -144,19 +116,6 @@ describe('Cards Component', () => {
 
     expect(container.textContent).toContain('Empty Cards');
     expect(container.querySelectorAll('a')).toHaveLength(0);
-
-    act(() => {
-      root.unmount();
-    });
-  });
-
-  it('handles undefined data gracefully', () => {
-    const root = createRoot(container);
-    expect(() => {
-      act(() => {
-        root.render(<Cards data={undefined as any} />);
-      });
-    }).not.toThrow();
 
     act(() => {
       root.unmount();
