@@ -141,5 +141,39 @@ describe('AppContext', () => {
       act(() => root.unmount());
       document.body.removeChild(container);
     });
+
+    it('defaults to ja when navigator.language is Japanese and no localStorage', () => {
+      const original = navigator.language;
+      Object.defineProperty(navigator, 'language', {
+        value: 'ja-JP',
+        configurable: true,
+      });
+      let ctx!: ReturnType<typeof useAppContext>;
+      const { root, container } = renderProvider((c) => (ctx = c));
+      expect(ctx.lang).toBe('ja');
+      act(() => root.unmount());
+      document.body.removeChild(container);
+      Object.defineProperty(navigator, 'language', {
+        value: original,
+        configurable: true,
+      });
+    });
+
+    it('defaults to en when navigator.language is non-Japanese and no localStorage', () => {
+      const original = navigator.language;
+      Object.defineProperty(navigator, 'language', {
+        value: 'en-US',
+        configurable: true,
+      });
+      let ctx!: ReturnType<typeof useAppContext>;
+      const { root, container } = renderProvider((c) => (ctx = c));
+      expect(ctx.lang).toBe('en');
+      act(() => root.unmount());
+      document.body.removeChild(container);
+      Object.defineProperty(navigator, 'language', {
+        value: original,
+        configurable: true,
+      });
+    });
   });
 });
