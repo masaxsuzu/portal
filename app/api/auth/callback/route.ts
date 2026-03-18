@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (allowedUser && username !== allowedUser) {
-    console.error(`[auth/callback] Access denied for user: ${username}`);
+    console.error('[auth/callback] Access denied for user: [REDACTED]');
     return NextResponse.redirect(
       new URL('/login?error=access_denied', req.url),
       { status: 302 }
