@@ -5,7 +5,8 @@
  *
  * これらのテストは実際の攻撃ベクターを文書化する目的で書かれている。
  * 一部は現在の実装が持つ既知の制限（replay攻撃など）を示し、
- * 一部は実際の脆弱性（SESSION_SECRET 漏洩時の allowlist バイパス）を示す。
+ * 一部は修正済みの脆弱性（SESSION_SECRET 漏洩時の allowlist バイパス）の
+ * 回帰テストとして機能する。
  */
 import { createSessionToken } from '../../app/api/auth/callback/route';
 import { proxy } from '../../proxy';
@@ -25,33 +26,33 @@ describe('Attack: SESSION_SECRET 漏洩による allowlist バイパス', () => 
     process.env.GITHUB_ALLOWED_USER = 'masaxsuzu';
   });
 
+  afterEach(() => {
+    delete process.env.GITHUB_ALLOWED_USER;
+  });
+
   /**
-   * 脆弱性:
-   *   proxy の verifySessionToken は HMAC の正当性のみ検証し、
-   *   トークン内のユーザー名が GITHUB_ALLOWED_USER と一致するかを確認しない。
+   * 修正済み:
+   *   verifySessionToken が GITHUB_ALLOWED_USER とトークン内ユーザー名の
+   *   一致を検証するようになり、allowlist バイパスは不可能になった。
    *
    * 攻撃手順:
    *   1. SESSION_SECRET を何らかの手段で入手する（env ファイル露出、ログ漏洩など）
    *   2. createSessionToken('attacker') で自分用の有効な HMAC トークンを生成
-   *   3. auth Cookie としてセットしてアクセス → 200 OK
-   *
-   * 期待される正しい挙動: 307 redirect to /login
-   * 現在の実際の挙動:     200 OK（アクセス許可される）
+   *   3. auth Cookie としてセットしてアクセス → 307 redirect（修正後）
    */
-  it('[VULN] SESSION_SECRET が漏洩したら allowlist 外のユーザーがアクセスできる', async () => {
+  it('[FIXED] SESSION_SECRET が漏洩しても allowlist 外のユーザーはアクセスできない', async () => {
     // 攻撃者が漏洩した SESSION_SECRET を使って自分のトークンを偽造
     const attackerToken = createSessionToken('evil-attacker');
 
     const req = makeRequest('/', attackerToken);
     const res = await proxy(req);
 
-    // HMAC は正しいので verifySessionToken は true を返す
-    // しかし evil-attacker は GITHUB_ALLOWED_USER ではない
-    // → 現状は 200 になってしまう（バイパス成功）
-    expect(res.status).toBe(200); // ← これが脆弱性の証拠
+    // HMAC は正しいが evil-attacker は GITHUB_ALLOWED_USER ではないため拒否される
+    expect(res.status).toBe(307);
+    expect(res.headers.get('location')).toContain('/login');
   });
 
-  it('[VULN] 管理者以外の任意のユーザー名でトークンを偽造できる', async () => {
+  it('[FIXED] 管理者以外の任意のユーザー名でトークンを偽造してもアクセスできない', async () => {
     const candidates = [
       'admin',
       'root',
@@ -64,8 +65,8 @@ describe('Attack: SESSION_SECRET 漏洩による allowlist バイパス', () => 
       const req = makeRequest('/', forgedToken);
       const res = await proxy(req);
 
-      // いずれも HMAC が正しいため proxy を通過してしまう
-      expect(res.status).toBe(200);
+      // HMAC が正しくてもユーザー名不一致のため拒否される
+      expect(res.status).toBe(307);
     }
   });
 });
