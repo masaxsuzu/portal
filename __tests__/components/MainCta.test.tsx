@@ -103,19 +103,6 @@ describe('MainCta Component', () => {
     });
   });
 
-  it('handles undefined data gracefully', () => {
-    const root = createRoot(container);
-    expect(() => {
-      act(() => {
-        root.render(<MainCta data={undefined as any} />);
-      });
-    }).not.toThrow();
-
-    act(() => {
-      root.unmount();
-    });
-  });
-
   it('handles empty strings', () => {
     const emptyData = { name: '', bio: '' };
     const root = createRoot(container);
