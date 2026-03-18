@@ -1,6 +1,6 @@
 /**
  * Integration tests: HomePage + AppContext (real, not mocked)
- * Verifies that language switching updates the main page UI correctly.
+ * Verifies that language/theme switching updates the main page UI correctly.
  */
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -93,6 +93,38 @@ describe('HomePage i18n integration', () => {
     act(() => langBtn.click());
 
     expect(container.textContent).toContain('masaxsuzu');
+
+    act(() => root.unmount());
+  });
+
+  it('toggles to light theme and updates documentElement class', () => {
+    const root = renderHome();
+
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    const themeBtn = container.querySelector(
+      '[aria-label="Toggle theme"]'
+    ) as HTMLButtonElement;
+    act(() => themeBtn.click());
+
+    expect(document.documentElement.classList.contains('light')).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+    expect(localStorage.getItem('theme')).toBe('light');
+
+    act(() => root.unmount());
+  });
+
+  it('toggles theme back to dark', () => {
+    const root = renderHome();
+
+    const themeBtn = container.querySelector(
+      '[aria-label="Toggle theme"]'
+    ) as HTMLButtonElement;
+    act(() => themeBtn.click());
+    act(() => themeBtn.click());
+
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(localStorage.getItem('theme')).toBe('dark');
 
     act(() => root.unmount());
   });
