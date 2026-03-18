@@ -1,11 +1,14 @@
+'use client';
+
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Controls from '../components/Controls';
-import { useAppContext } from '../contexts/AppContext';
-import type { Translations } from '../lib/i18n';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import Controls from '../../components/Controls';
+import { useAppContext } from '../../contexts/AppContext';
+import type { Translations } from '../../lib/i18n';
 
 function getOAuthErrorMessage(
-  error: string | string[] | undefined,
+  error: string | null,
   t: Translations
 ): string | null {
   switch (error) {
@@ -24,32 +27,38 @@ function getOAuthErrorMessage(
   }
 }
 
-export default function LoginPage() {
+function LoginContent() {
   const { t } = useAppContext();
-  const { query } = useRouter();
-  const errorMessage = getOAuthErrorMessage(query.error, t);
+  const searchParams = useSearchParams();
+  const errorMessage = getOAuthErrorMessage(searchParams.get('error'), t);
 
+  return (
+    <div className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg text-center">
+      <h1 className="text-primary text-2xl text-center mb-2">{t.loginTitle}</h1>
+      <p className="text-primary/50 text-sm text-center mb-6">
+        {t.loginSubtext}
+      </p>
+      {errorMessage && (
+        <p className="text-red-400 text-sm mb-4">{errorMessage}</p>
+      )}
+      <Link
+        href="/api/auth/github"
+        className="flex items-center justify-center gap-2 w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
+      >
+        <GitHubIcon />
+        {t.loginButton}
+      </Link>
+    </div>
+  );
+}
+
+export default function LoginPage() {
   return (
     <div className="flex justify-center items-center h-screen bg-background">
       <Controls />
-      <div className="bg-cardbg border border-cardborder rounded-lg p-8 min-w-[320px] shadow-lg text-center">
-        <h1 className="text-primary text-2xl text-center mb-2">
-          {t.loginTitle}
-        </h1>
-        <p className="text-primary/50 text-sm text-center mb-6">
-          {t.loginSubtext}
-        </p>
-        {errorMessage && (
-          <p className="text-red-400 text-sm mb-4">{errorMessage}</p>
-        )}
-        <Link
-          href="/api/auth/github"
-          className="flex items-center justify-center gap-2 w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
-        >
-          <GitHubIcon />
-          {t.loginButton}
-        </Link>
-      </div>
+      <Suspense>
+        <LoginContent />
+      </Suspense>
     </div>
   );
 }

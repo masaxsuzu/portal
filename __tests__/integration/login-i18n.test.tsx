@@ -4,11 +4,11 @@
  */
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import LoginPage from '../../pages/login';
+import LoginPage from '../../app/login/page';
 import { AppProvider } from '../../contexts/AppContext';
 
-jest.mock('next/router', () => ({
-  useRouter: () => ({ query: {} }),
+jest.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 describe('LoginPage i18n integration', () => {

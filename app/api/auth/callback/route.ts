@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { serialize } from 'cookie';
 import crypto from 'crypto';
 
@@ -11,14 +11,16 @@ export function createSessionToken(username: string): string {
   return `${username}.${hmac}`;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { code } = req.query;
-  if (!code || typeof code !== 'string') {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const code = searchParams.get('code');
+
+  if (!code) {
     console.error('[auth/callback] Missing code in query');
-    return res.redirect('/login?error=missing_code');
+    return NextResponse.redirect(
+      new URL('/login?error=missing_code', req.url),
+      { status: 302 }
+    );
   }
 
   const clientId = process.env.GITHUB_CLIENT_ID;
@@ -27,7 +29,10 @@ export default async function handler(
 
   if (!clientId || !clientSecret) {
     console.error('[auth/callback] GitHub OAuth env vars not configured');
-    return res.redirect('/login?error=not_configured');
+    return NextResponse.redirect(
+      new URL('/login?error=not_configured', req.url),
+      { status: 302 }
+    );
   }
 
   const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
@@ -56,7 +61,10 @@ export default async function handler(
       tokenData.error,
       tokenData.error_description
     );
-    return res.redirect('/login?error=token_failed');
+    return NextResponse.redirect(
+      new URL('/login?error=token_failed', req.url),
+      { status: 302 }
+    );
   }
 
   const userRes = await fetch('https://api.github.com/user', {
@@ -71,12 +79,17 @@ export default async function handler(
 
   if (!username) {
     console.error('[auth/callback] Failed to get user info from GitHub API');
-    return res.redirect('/login?error=user_failed');
+    return NextResponse.redirect(new URL('/login?error=user_failed', req.url), {
+      status: 302,
+    });
   }
 
   if (allowedUser && username !== allowedUser) {
     console.error(`[auth/callback] Access denied for user: ${username}`);
-    return res.redirect('/login?error=access_denied');
+    return NextResponse.redirect(
+      new URL('/login?error=access_denied', req.url),
+      { status: 302 }
+    );
   }
 
   const sessionToken = createSessionToken(username);
@@ -88,6 +101,9 @@ export default async function handler(
     maxAge: 60 * 60 * 24,
   });
 
-  res.setHeader('Set-Cookie', cookie);
-  res.redirect('/');
+  const response = NextResponse.redirect(new URL('/', req.url), {
+    status: 302,
+  });
+  response.headers.set('Set-Cookie', cookie);
+  return response;
 }
