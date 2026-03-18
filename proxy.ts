@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function verifySessionToken(token: string): Promise<boolean> {
+export async function verifySessionToken(
+  token: string,
+  allowedUser?: string
+): Promise<boolean> {
   const secret = process.env.SESSION_SECRET;
   if (!secret) return false;
   const dotIndex = token.lastIndexOf('.');
@@ -10,6 +13,9 @@ export async function verifySessionToken(token: string): Promise<boolean> {
   const signature = token.slice(dotIndex + 1);
 
   if (!username || !signature) return false;
+
+  // allowedUser が設定されている場合のみユーザー名を検証する
+  if (allowedUser && username !== allowedUser) return false;
 
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -30,6 +36,7 @@ export async function verifySessionToken(token: string): Promise<boolean> {
 export async function proxy(request: NextRequest) {
   const authCookie = request.cookies.get('auth');
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
+  const allowedUser = process.env.GITHUB_ALLOWED_USER;
 
   if (!authCookie) {
     if (!isLoginPage) {
@@ -38,7 +45,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isValid = await verifySessionToken(authCookie.value);
+  const isValid = await verifySessionToken(authCookie.value, allowedUser);
 
   if (!isValid) {
     const response = NextResponse.redirect(new URL('/login', request.url));
