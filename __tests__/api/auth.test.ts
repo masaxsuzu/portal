@@ -78,7 +78,9 @@ describe('/api/auth/callback', () => {
     const res = await callbackHandler(req);
 
     expect(res.status).toBe(302);
-    expect(res.headers.get('location')).toContain('/login?error=not_configured');
+    expect(res.headers.get('location')).toContain(
+      '/login?error=not_configured'
+    );
   });
 
   it('should redirect to /login?error=state_mismatch when state is missing', async () => {
@@ -89,7 +91,9 @@ describe('/api/auth/callback', () => {
     const res = await callbackHandler(req);
 
     expect(res.status).toBe(302);
-    expect(res.headers.get('location')).toContain('/login?error=state_mismatch');
+    expect(res.headers.get('location')).toContain(
+      '/login?error=state_mismatch'
+    );
   });
 
   it('should redirect to /login?error=state_mismatch when state does not match cookie', async () => {
@@ -103,7 +107,9 @@ describe('/api/auth/callback', () => {
     const res = await callbackHandler(req);
 
     expect(res.status).toBe(302);
-    expect(res.headers.get('location')).toContain('/login?error=state_mismatch');
+    expect(res.headers.get('location')).toContain(
+      '/login?error=state_mismatch'
+    );
   });
 
   it('should redirect to /login?error=missing_code when code is missing', async () => {
