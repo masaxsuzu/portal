@@ -47,11 +47,7 @@ export default function RootLayout({
           referrerPolicy="no-referrer"
         />
         <link rel="icon" href="/favicon.ico" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('theme')||'dark';document.documentElement.classList.add(t);}catch(e){}`,
-          }}
-        />
+        <script src="/theme-init.js" />
       </head>
       <body>
         <AppProvider>{children}</AppProvider>
