@@ -13,14 +13,14 @@ async function setStubUser(login: string) {
 test('許可ユーザーがログインするとホームに到達する', async ({ page }) => {
   await setStubUser('testuser');
   await page.goto('/login');
-  await page.getByRole('link', { name: /github/i }).click();
+  await page.locator('a[href="/api/auth/github"]').click();
   await expect(page).toHaveURL('/');
 });
 
 test('不正ユーザーはアクセス拒否されログインページに戻る', async ({ page }) => {
   await setStubUser('otheruser');
   await page.goto('/login');
-  await page.getByRole('link', { name: /github/i }).click();
+  await page.locator('a[href="/api/auth/github"]').click();
   await expect(page).toHaveURL(/\/login.*access_denied/);
 });
 
