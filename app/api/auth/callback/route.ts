@@ -57,8 +57,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const oauthBase =
-    process.env.GITHUB_OAUTH_BASE_URL ?? 'https://github.com';
+  const oauthBase = process.env.GITHUB_OAUTH_BASE_URL ?? 'https://github.com';
   const apiBase = process.env.GITHUB_API_BASE_URL ?? 'https://api.github.com';
 
   const tokenRes = await fetch(`${oauthBase}/login/oauth/access_token`, {
