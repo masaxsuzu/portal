@@ -3,27 +3,33 @@
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 
+function getSessionExpires(): number | null {
+  const match = document.cookie.match(/(?:^|;\s*)session_expires=(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
 export default function SessionLock() {
   const [locked, setLocked] = useState(false);
   const { t } = useAppContext();
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-
-    fetch('/api/auth/session')
-      .then((res) => res.json())
-      .then((data: { expiresIn: number }) => {
-        const ms = data.expiresIn * 1000;
-        if (ms <= 0) {
-          setLocked(true);
-          return;
-        }
-        timeoutId = setTimeout(() => setLocked(true), ms);
-      })
-      .catch(() => {});
-
-    return () => clearTimeout(timeoutId);
+    const id = setInterval(() => {
+      const expires = getSessionExpires();
+      if (expires !== null && Math.floor(Date.now() / 1000) >= expires) {
+        setLocked(true);
+        clearInterval(id);
+      }
+    }, 1000);
+    return () => clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    if (!locked) return;
+    const id = setTimeout(() => {
+      window.location.assign('/login?error=session_expired');
+    }, 3000);
+    return () => clearTimeout(id);
+  }, [locked]);
 
   if (!locked) return null;
 
@@ -33,15 +39,7 @@ export default function SessionLock() {
         <h2 className="text-primary text-xl font-semibold mb-3">
           {t.sessionExpiredTitle}
         </h2>
-        <p className="text-primary/60 text-sm mb-6">
-          {t.sessionExpiredMessage}
-        </p>
-        <button
-          onClick={() => window.location.assign('/login?error=session_expired')}
-          className="w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
-        >
-          {t.sessionExpiredButton}
-        </button>
+        <p className="text-primary/60 text-sm">{t.sessionExpiredMessage}</p>
       </div>
     </div>
   );

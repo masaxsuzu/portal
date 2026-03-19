@@ -200,6 +200,8 @@ describe('/api/auth/callback', () => {
     expect(allCookies).toContain('HttpOnly');
     expect(allCookies.toLowerCase()).toContain('samesite=lax');
     expect(allCookies).toContain('Max-Age=10800');
+    expect(allCookies).toContain('session_expires=');
+    expect(allCookies).not.toMatch(/session_expires=[^;]+HttpOnly/);
   });
 
   it('should set Secure cookie in production', async () => {
