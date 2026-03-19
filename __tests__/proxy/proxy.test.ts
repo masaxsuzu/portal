@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import { proxy, verifySessionToken } from '../../proxy';
-import { createSessionToken } from '../../app/api/auth/callback/route';
+import { createSessionToken } from '../../lib/session';
 import { NextRequest } from 'next/server';
 
 function makeRequest(path: string, authToken?: string): NextRequest {
@@ -134,6 +134,36 @@ describe('proxy', () => {
       const res = await proxy(req);
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toContain('/login');
+    });
+  });
+
+  describe('AUTH_BYPASS_USER 設定時（Vercel プレビュー用バイパス）', () => {
+    beforeEach(() => {
+      process.env.AUTH_BYPASS_USER = 'preview-user';
+    });
+
+    afterEach(() => {
+      delete process.env.AUTH_BYPASS_USER;
+    });
+
+    it('should allow access to / without any cookie', async () => {
+      const req = makeRequest('/');
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should redirect /login to / (skip login page)', async () => {
+      const req = makeRequest('/login');
+      const res = await proxy(req);
+      expect(res.status).toBe(307);
+      expect(res.headers.get('location')).toContain('/');
+      expect(res.headers.get('location')).not.toContain('/login');
+    });
+
+    it('should allow access even with an invalid cookie', async () => {
+      const req = makeRequest('/', 'invalid-token');
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
     });
   });
 });
