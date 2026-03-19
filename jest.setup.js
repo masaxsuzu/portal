@@ -8,6 +8,13 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 process.env.NODE_ENV = 'test';
 process.env.PASSWORD = 'test-password';
 
+// Provide a default fetch mock for jsdom environment (no native fetch)
+if (typeof globalThis.fetch === 'undefined') {
+  globalThis.fetch = jest.fn().mockResolvedValue({
+    json: async () => ({ expiresIn: 3600 }),
+  });
+}
+
 // Add DOM environment setup for component tests (jsdom environment only)
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'matchMedia', {

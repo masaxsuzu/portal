@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAppContext } from '../contexts/AppContext';
 
 export default function SessionLock() {
   const [locked, setLocked] = useState(false);
-  const router = useRouter();
   const { t } = useAppContext();
 
   useEffect(() => {
@@ -37,7 +35,7 @@ export default function SessionLock() {
         </h2>
         <p className="text-primary/60 text-sm mb-6">{t.sessionExpiredMessage}</p>
         <button
-          onClick={() => router.push('/login?error=session_expired')}
+          onClick={() => window.location.assign('/login?error=session_expired')}
           className="w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
         >
           {t.sessionExpiredButton}
