@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const SESSION_TTL_SECONDS = 60 * 60 * 3; // 3時間
+
 export async function verifySessionToken(
   token: string,
   allowedUser?: string
 ): Promise<boolean> {
   const secret = process.env.SESSION_SECRET;
   if (!secret) return false;
-  const dotIndex = token.lastIndexOf('.');
-  if (dotIndex === -1) return false;
 
-  const username = token.slice(0, dotIndex);
-  const signature = token.slice(dotIndex + 1);
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
 
-  if (!username || !signature) return false;
+  const [username, timestampStr, signature] = parts;
+  if (!username || !timestampStr || !signature) return false;
+
+  const timestamp = Number(timestampStr);
+  if (isNaN(timestamp)) return false;
+
+  const now = Math.floor(Date.now() / 1000);
+  if (now - timestamp > SESSION_TTL_SECONDS) return false;
 
   // allowedUser が設定されている場合のみユーザー名を検証する
   if (allowedUser && username !== allowedUser) return false;
@@ -30,7 +37,12 @@ export async function verifySessionToken(
     (signature.match(/.{2}/g) ?? []).map((b) => parseInt(b, 16))
   );
 
-  return crypto.subtle.verify('HMAC', key, sigBytes, encoder.encode(username));
+  return crypto.subtle.verify(
+    'HMAC',
+    key,
+    sigBytes,
+    encoder.encode(`${username}.${timestampStr}`)
+  );
 }
 
 export async function proxy(request: NextRequest) {

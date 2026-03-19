@@ -6,11 +6,12 @@ export function createSessionToken(username: string): string {
   if (!secret) {
     throw new Error('SESSION_SECRET is not configured');
   }
+  const timestamp = Math.floor(Date.now() / 1000).toString();
   const hmac = crypto
     .createHmac('sha256', secret)
-    .update(username)
+    .update(`${username}.${timestamp}`)
     .digest('hex');
-  return `${username}.${hmac}`;
+  return `${username}.${timestamp}.${hmac}`;
 }
 
 export async function GET(req: NextRequest) {
@@ -120,7 +121,7 @@ export async function GET(req: NextRequest) {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24,
+    maxAge: 60 * 60 * 3,
   });
   response.cookies.set('oauth_state', '', { maxAge: 0, path: '/' });
   return response;
