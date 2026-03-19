@@ -57,53 +57,38 @@ function buildCsp(nonce: string): string {
 }
 
 export async function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const authCookie = request.cookies.get('auth');
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
   const allowedUser = process.env.GITHUB_ALLOWED_USER;
 
+  const redirect = (path: string) => {
+    const res = NextResponse.redirect(new URL(path, request.url));
+    res.headers.set('Content-Security-Policy', buildCsp(nonce));
+    return res;
+  };
+
   if (!authCookie) {
-    if (!isLoginPage) {
-      return NextResponse.redirect(new URL('/login', request.url));
+    if (!isLoginPage) return redirect('/login');
+  } else {
+    const isValid = await verifySessionToken(authCookie.value, allowedUser);
+    if (!isValid) {
+      const res = redirect('/login');
+      res.cookies.delete('auth');
+      return res;
     }
-    return NextResponse.next();
+    if (isLoginPage) return redirect('/');
   }
 
-  const isValid = await verifySessionToken(authCookie.value, allowedUser);
-
-  if (!isValid) {
-    const response = NextResponse.redirect(new URL('/login', request.url));
-    response.cookies.delete('auth');
-    return response;
-  }
-
-  if (isLoginPage) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  return NextResponse.next();
-}
-
-export async function middleware(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  const inner = await proxy(request);
-
-  const isRedirect = inner.status !== 200;
-  const response = isRedirect
-    ? inner
-    : NextResponse.next({
-        request: {
-          headers: new Headers({
-            ...Object.fromEntries(request.headers),
-            'x-nonce': nonce,
-          }),
-        },
-      });
-
+  const response = NextResponse.next({
+    request: {
+      headers: new Headers({
+        ...Object.fromEntries(request.headers),
+        'x-nonce': nonce,
+      }),
+    },
+  });
   response.headers.set('Content-Security-Policy', buildCsp(nonce));
-  if (!isRedirect) {
-    response.headers.set('x-nonce', nonce);
-  }
-
   return response;
 }
 
