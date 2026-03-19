@@ -199,7 +199,7 @@ describe('/api/auth/callback', () => {
     expect(allCookies).toContain('auth=');
     expect(allCookies).toContain('HttpOnly');
     expect(allCookies.toLowerCase()).toContain('samesite=lax');
-    expect(allCookies).toContain('Max-Age=86400');
+    expect(allCookies).toContain('Max-Age=10800');
   });
 
   it('should set Secure cookie in production', async () => {
@@ -248,12 +248,13 @@ describe('createSessionToken', () => {
     process.env.SESSION_SECRET = 'test-secret';
   });
 
-  it('should return a token in the format username.hmac', () => {
+  it('should return a token in the format username.timestamp.hmac', () => {
     const token = createSessionToken('masaxsuzu');
     const parts = token.split('.');
-    expect(parts).toHaveLength(2);
+    expect(parts).toHaveLength(3);
     expect(parts[0]).toBe('masaxsuzu');
-    expect(parts[1]).toMatch(/^[0-9a-f]{64}$/);
+    expect(parts[1]).toMatch(/^\d+$/);
+    expect(parts[2]).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it('should produce different tokens for different secrets', () => {

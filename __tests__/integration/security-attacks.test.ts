@@ -93,7 +93,7 @@ describe('Attack: トークンリプレイ（Cookie 盗用）', () => {
 
   /**
    * 制限事項:
-   *   ログアウト機能がないため、盗まれたトークンは maxAge（24h）が
+   *   ログアウト機能がないため、盗まれたトークンは maxAge（3h）が
    *   切れるまで無効化できない。
    *
    * 攻撃手順:
@@ -135,10 +135,10 @@ describe('Attack: トークン偽造（SECRET なし）', () => {
     // 別の SECRET で作ったトークンの username を masaxsuzu に置き換え
     process.env.SESSION_SECRET = 'attacker-knows-this-secret';
     const originalToken = createSessionToken('other-user');
-    const [, signature] = originalToken.split('.');
+    const [, timestamp, signature] = originalToken.split('.');
 
-    // username だけ masaxsuzu に差し替え（署名は other-user のまま）
-    const tamperedToken = `masaxsuzu.${signature}`;
+    // username だけ masaxsuzu に差し替え（署名は other-user.timestamp のまま）
+    const tamperedToken = `masaxsuzu.${timestamp}.${signature}`;
 
     process.env.SESSION_SECRET = 'unknown-secret'; // サーバー側は別の secret を使用
     const req = makeRequest('/', tamperedToken);
