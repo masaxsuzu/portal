@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import '../styles/globals.css';
 import { AppProvider } from '../contexts/AppContext';
 
@@ -8,11 +9,12 @@ export const metadata: Metadata = {
   description: 'Portfolio Website',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const nonce = (await headers()).get('x-nonce') ?? '';
   return (
     <html>
       <head>
@@ -49,7 +51,11 @@ export default function RootLayout({
           referrerPolicy="no-referrer"
         />
         <link rel="icon" href="/favicon.ico" />
-        <Script src="/theme-init.js" strategy="beforeInteractive" />
+        <Script
+          src="/theme-init.js"
+          strategy="beforeInteractive"
+          nonce={nonce}
+        />
       </head>
       <body>
         <AppProvider>{children}</AppProvider>
