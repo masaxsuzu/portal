@@ -15,6 +15,10 @@ export const translations = {
     oauthErrorTokenFailed: 'OAuth error: failed to get access token',
     oauthErrorUserFailed: 'OAuth error: failed to get user info',
     oauthErrorAccessDenied: 'Access denied',
+    sessionExpiredTitle: 'Session Expired',
+    sessionExpiredMessage: 'Your session has expired. Please log in again.',
+    sessionExpiredButton: 'Go to Login',
+    oauthErrorSessionExpired: 'Your session has expired. Please log in again.',
   },
   ja: {
     mainCtaBio: 'ソフトウェアエンジニア | C# | フィットネス愛好家',
@@ -30,6 +34,12 @@ export const translations = {
     oauthErrorTokenFailed: 'OAuth エラー: アクセストークンの取得に失敗しました',
     oauthErrorUserFailed: 'OAuth エラー: ユーザー情報の取得に失敗しました',
     oauthErrorAccessDenied: 'アクセスが拒否されました',
+    sessionExpiredTitle: 'セッション期限切れ',
+    sessionExpiredMessage:
+      'セッションの有効期限が切れました。再度ログインしてください。',
+    sessionExpiredButton: 'ログイン画面へ',
+    oauthErrorSessionExpired:
+      'セッションの有効期限が切れました。再度ログインしてください。',
   },
 } as const;
 

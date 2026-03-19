@@ -6,6 +6,7 @@ import MainCta from '../components/MainCta';
 import Divider from '../components/Divider';
 import Cards from '../components/Cards';
 import Controls from '../components/Controls';
+import SessionLock from '../components/SessionLock';
 import { useAppContext } from '../contexts/AppContext';
 import type { Translations } from '../lib/i18n';
 
@@ -35,6 +36,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-background flex justify-center w-full">
+      <SessionLock />
       <Controls />
       <div className="my-10  text-primary max-w-[1024px] flex flex-col items-start px-6">
         {data?.components?.map((item, idx) => {

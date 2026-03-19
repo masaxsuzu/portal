@@ -22,6 +22,8 @@ function getOAuthErrorMessage(
       return t.oauthErrorUserFailed;
     case 'access_denied':
       return t.oauthErrorAccessDenied;
+    case 'session_expired':
+      return t.oauthErrorSessionExpired;
     default:
       return null;
   }
