@@ -82,20 +82,25 @@ describe('LoginPage', () => {
   });
 
   describe('OAuth error messages', () => {
-    const errorCodes = [
-      'missing_code',
-      'not_configured',
-      'token_failed',
-      'user_failed',
-      'access_denied',
+    const errorCases: [string, string][] = [
+      ['missing_code', 'OAuth error: missing code'],
+      ['not_configured', 'OAuth error: server not configured'],
+      ['token_failed', 'OAuth error: failed to get access token'],
+      ['user_failed', 'OAuth error: failed to get user info'],
+      ['access_denied', 'Access denied'],
     ];
 
-    it.each(errorCodes)('shows error message for ?error=%s', (errorCode) => {
-      mockErrorCode = errorCode;
-      const root = renderLogin();
-      expect(container.querySelector('p.text-red-400')).not.toBeNull();
-      act(() => root.unmount());
-    });
+    it.each(errorCases)(
+      'shows correct error message for ?error=%s',
+      (errorCode, expectedMessage) => {
+        mockErrorCode = errorCode;
+        const root = renderLogin();
+        const errorEl = container.querySelector('p.text-red-400');
+        expect(errorEl).not.toBeNull();
+        expect(errorEl?.textContent).toBe(expectedMessage);
+        act(() => root.unmount());
+      }
+    );
 
     it('shows no error message when error param is absent', () => {
       const root = renderLogin();
