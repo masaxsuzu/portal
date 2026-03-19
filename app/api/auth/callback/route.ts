@@ -112,7 +112,7 @@ export async function GET(req: NextRequest) {
   }
 
   const sessionToken = createSessionToken(username);
-  const sessionExpires = Math.floor(Date.now() / 1000) + 60 * 60 * 3;
+  const sessionExpires = Math.floor(Date.now() / 1000) + 60 * 60;
 
   const response = NextResponse.redirect(new URL('/', req.url), {
     status: 302,
@@ -122,14 +122,12 @@ export async function GET(req: NextRequest) {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 3,
   });
   response.cookies.set('session_expires', String(sessionExpires), {
     httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 3,
   });
   response.cookies.set('oauth_state', '', { maxAge: 0, path: '/' });
   return response;

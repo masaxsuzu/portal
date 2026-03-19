@@ -196,12 +196,21 @@ describe('/api/auth/callback', () => {
 
     expect(res.status).toBe(302);
     const allCookies = res.headers.getSetCookie().join('\n');
-    expect(allCookies).toContain('auth=');
-    expect(allCookies).toContain('HttpOnly');
-    expect(allCookies.toLowerCase()).toContain('samesite=lax');
-    expect(allCookies).toContain('Max-Age=10800');
-    expect(allCookies).toContain('session_expires=');
-    expect(allCookies).not.toMatch(/session_expires=[^;]+HttpOnly/);
+    // auth: httpOnly セッションクッキー（maxAge なし）
+    const authCookie = res.headers
+      .getSetCookie()
+      .find((c) => c.startsWith('auth='))!;
+    expect(authCookie).toContain('HttpOnly');
+    expect(authCookie.toLowerCase()).toContain('samesite=lax');
+    expect(authCookie).not.toContain('Max-Age');
+    // session_expires: JS から読める（非 httpOnly）、値は約1時間後の unix timestamp
+    const expiresMatch = allCookies.match(/session_expires=(\d+)/);
+    expect(expiresMatch).not.toBeNull();
+    const expiresAt = Number(expiresMatch![1]);
+    const now = Math.floor(Date.now() / 1000);
+    expect(expiresAt).toBeGreaterThan(now + 3590);
+    expect(expiresAt).toBeLessThan(now + 3610);
+    expect(allCookies).not.toMatch(/session_expires=\d+[^]*HttpOnly/);
   });
 
   it('should set Secure cookie in production', async () => {

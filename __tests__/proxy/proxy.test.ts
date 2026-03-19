@@ -4,6 +4,17 @@
 import { proxy, verifySessionToken } from '../../proxy';
 import { createSessionToken } from '../../app/api/auth/callback/route';
 import { NextRequest } from 'next/server';
+import crypto from 'crypto';
+
+function createExpiredToken(username: string): string {
+  const secret = process.env.SESSION_SECRET!;
+  const timestamp = (Math.floor(Date.now() / 1000) - 60 * 60 - 1).toString();
+  const hmac = crypto
+    .createHmac('sha256', secret)
+    .update(`${username}.${timestamp}`)
+    .digest('hex');
+  return `${username}.${timestamp}.${hmac}`;
+}
 
 function makeRequest(path: string, authToken?: string): NextRequest {
   const headers: Record<string, string> = {};
@@ -78,6 +89,22 @@ describe('proxy', () => {
       const req = makeRequest('/login');
       const res = await proxy(req);
       expect(res.status).toBe(200);
+    });
+  });
+
+  describe('expired token', () => {
+    it('should reject token older than 1 hour', async () => {
+      const expired = createExpiredToken('masaxsuzu');
+      expect(await verifySessionToken(expired)).toBe(false);
+    });
+
+    it('should redirect to /login and clear cookie for expired token', async () => {
+      const expired = createExpiredToken('masaxsuzu');
+      const req = makeRequest('/', expired);
+      const res = await proxy(req);
+      expect(res.status).toBe(307);
+      expect(res.headers.get('location')).toContain('/login');
+      expect(res.headers.get('set-cookie')).toContain('auth=;');
     });
   });
 
