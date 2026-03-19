@@ -45,6 +45,17 @@ export async function verifySessionToken(
   );
 }
 
+function buildCsp(nonce: string): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}'`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
+    "img-src 'self' data:",
+    "connect-src 'self'",
+  ].join('; ');
+}
+
 export async function proxy(request: NextRequest) {
   const authCookie = request.cookies.get('auth');
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
@@ -70,6 +81,30 @@ export async function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
+}
+
+export async function middleware(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const inner = await proxy(request);
+
+  const isRedirect = inner.status !== 200;
+  const response = isRedirect
+    ? inner
+    : NextResponse.next({
+        request: {
+          headers: new Headers({
+            ...Object.fromEntries(request.headers),
+            'x-nonce': nonce,
+          }),
+        },
+      });
+
+  response.headers.set('Content-Security-Policy', buildCsp(nonce));
+  if (!isRedirect) {
+    response.headers.set('x-nonce', nonce);
+  }
+
+  return response;
 }
 
 export const config = {
