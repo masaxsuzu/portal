@@ -12,6 +12,7 @@ const { useAppContext } = require('../../contexts/AppContext');
 const mockT = {
   sessionExpiredTitle: 'Session Expired',
   sessionExpiredMessage: 'Your session has expired. Please log in again.',
+  sessionExpiredCountdown: 'Redirecting in {n} seconds...',
 };
 
 describe('SessionLock', () => {
@@ -91,7 +92,7 @@ describe('SessionLock', () => {
     act(() => root.unmount());
   });
 
-  it('shows overlay and starts redirect timer after lock', async () => {
+  it('shows countdown starting at 10', async () => {
     const past = Math.floor(Date.now() / 1000) - 1;
     Object.defineProperty(document, 'cookie', {
       writable: true,
@@ -107,14 +108,53 @@ describe('SessionLock', () => {
       jest.advanceTimersByTime(1000);
     });
 
-    expect(container.querySelector('h2')).not.toBeNull();
+    expect(container.textContent).toContain('Redirecting in 10 seconds...');
+    act(() => root.unmount());
+  });
 
-    // 3 seconds later the redirect timeout fires (window.location.assign)
-    // jsdom does not allow spying on window.location.assign, so we verify
-    // the overlay is still shown at that point and no error is thrown
+  it('decrements countdown each second', async () => {
+    const past = Math.floor(Date.now() / 1000) - 1;
+    Object.defineProperty(document, 'cookie', {
+      writable: true,
+      value: `session_expires=${past}`,
+    });
+
+    const root = createRoot(container);
+    act(() => {
+      root.render(<SessionLock />);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
+
+    expect(container.textContent).toContain('Redirecting in 7 seconds...');
+    act(() => root.unmount());
+  });
+
+  it('fires redirect after 10 seconds without throwing', async () => {
+    const past = Math.floor(Date.now() / 1000) - 1;
+    Object.defineProperty(document, 'cookie', {
+      writable: true,
+      value: `session_expires=${past}`,
+    });
+
+    const root = createRoot(container);
+    act(() => {
+      root.render(<SessionLock />);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+
     expect(() => {
       act(() => {
-        jest.advanceTimersByTime(3000);
+        jest.advanceTimersByTime(10000);
       });
     }).not.toThrow();
 

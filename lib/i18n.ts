@@ -17,7 +17,7 @@ export const translations = {
     oauthErrorAccessDenied: 'Access denied',
     sessionExpiredTitle: 'Session Expired',
     sessionExpiredMessage: 'Your session has expired. Please log in again.',
-    sessionExpiredButton: 'Go to Login',
+    sessionExpiredCountdown: 'Redirecting in {n} seconds...',
     oauthErrorSessionExpired: 'Your session has expired. Please log in again.',
   },
   ja: {
@@ -37,7 +37,7 @@ export const translations = {
     sessionExpiredTitle: 'セッション期限切れ',
     sessionExpiredMessage:
       'セッションの有効期限が切れました。再度ログインしてください。',
-    sessionExpiredButton: 'ログイン画面へ',
+    sessionExpiredCountdown: '{n}秒後にリダイレクトします...',
     oauthErrorSessionExpired:
       'セッションの有効期限が切れました。再度ログインしてください。',
   },

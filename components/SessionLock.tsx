@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 
+const REDIRECT_SECONDS = 10;
+
 function getSessionExpires(): number | null {
   const match = document.cookie.match(/(?:^|;\s*)session_expires=(\d+)/);
   return match ? Number(match[1]) : null;
@@ -10,6 +12,7 @@ function getSessionExpires(): number | null {
 
 export default function SessionLock() {
   const [locked, setLocked] = useState(false);
+  const [countdown, setCountdown] = useState(REDIRECT_SECONDS);
   const { t } = useAppContext();
 
   useEffect(() => {
@@ -25,10 +28,17 @@ export default function SessionLock() {
 
   useEffect(() => {
     if (!locked) return;
-    const id = setTimeout(() => {
-      window.location.assign('/login?error=session_expired');
-    }, 3000);
-    return () => clearTimeout(id);
+    const id = setInterval(() => {
+      setCountdown((n) => {
+        if (n <= 1) {
+          clearInterval(id);
+          window.location.assign('/login?error=session_expired');
+          return 0;
+        }
+        return n - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
   }, [locked]);
 
   if (!locked) return null;
@@ -39,7 +49,10 @@ export default function SessionLock() {
         <h2 className="text-primary text-xl font-semibold mb-3">
           {t.sessionExpiredTitle}
         </h2>
-        <p className="text-primary/60 text-sm">{t.sessionExpiredMessage}</p>
+        <p className="text-primary/60 text-sm mb-4">{t.sessionExpiredMessage}</p>
+        <p className="text-primary/40 text-xs">
+          {t.sessionExpiredCountdown.replace('{n}', String(countdown))}
+        </p>
       </div>
     </div>
   );
