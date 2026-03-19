@@ -12,7 +12,8 @@ export function GET() {
 
   const state = crypto.randomBytes(32).toString('hex');
 
-  const url = new URL('https://github.com/login/oauth/authorize');
+  const oauthBase = process.env.GITHUB_OAUTH_BASE_URL ?? 'https://github.com';
+  const url = new URL(`${oauthBase}/login/oauth/authorize`);
   url.searchParams.set('client_id', clientId);
   url.searchParams.set('scope', 'read:user');
   url.searchParams.set('state', state);
