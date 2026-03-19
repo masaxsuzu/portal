@@ -51,7 +51,11 @@ export default async function RootLayout({
           referrerPolicy="no-referrer"
         />
         <link rel="icon" href="/favicon.ico" />
-        <Script src="/theme-init.js" strategy="beforeInteractive" nonce={nonce} />
+        <Script
+          src="/theme-init.js"
+          strategy="beforeInteractive"
+          nonce={nonce}
+        />
       </head>
       <body>
         <AppProvider>{children}</AppProvider>
