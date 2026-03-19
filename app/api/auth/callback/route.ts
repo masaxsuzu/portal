@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { SESSION_TTL_SECONDS } from '../../../../lib/session';
 
 export function createSessionToken(username: string): string {
   const secret = process.env.SESSION_SECRET;
@@ -112,7 +113,7 @@ export async function GET(req: NextRequest) {
   }
 
   const sessionToken = createSessionToken(username);
-  const sessionExpires = Math.floor(Date.now() / 1000) + 60 * 60;
+  const sessionExpires = Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS;
 
   const response = NextResponse.redirect(new URL('/', req.url), {
     status: 302,

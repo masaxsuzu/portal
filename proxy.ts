@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const SESSION_TTL_SECONDS = 60 * 60; // 1時間
+import { SESSION_TTL_SECONDS } from './lib/session';
 
 export async function verifySessionToken(
   token: string,
