@@ -33,7 +33,9 @@ export default function SessionLock() {
         <h2 className="text-primary text-xl font-semibold mb-3">
           {t.sessionExpiredTitle}
         </h2>
-        <p className="text-primary/60 text-sm mb-6">{t.sessionExpiredMessage}</p>
+        <p className="text-primary/60 text-sm mb-6">
+          {t.sessionExpiredMessage}
+        </p>
         <button
           onClick={() => window.location.assign('/login?error=session_expired')}
           className="w-full py-3 rounded bg-skyblue text-background font-semibold hover:opacity-90 transition-opacity"
