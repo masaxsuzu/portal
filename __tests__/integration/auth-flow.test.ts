@@ -9,6 +9,7 @@ import {
   GET as callbackHandler,
   createSessionToken,
 } from '../../app/api/auth/callback/route';
+import { GET as githubHandler } from '../../app/api/auth/github/route';
 import { proxy, verifySessionToken } from '../../proxy';
 import { NextRequest } from 'next/server';
 
@@ -49,6 +50,56 @@ describe('Auth flow integration', () => {
       const token = createSessionToken('masaxsuzu');
       process.env.SESSION_SECRET = 'different-secret';
       expect(await verifySessionToken(token)).toBe(false);
+    });
+  });
+
+  describe('GitHub OAuth initiation → callback state round-trip', () => {
+    it('state cookie from github handler is accepted by callback handler', async () => {
+      // Step 1: call github handler to generate state
+      const githubRes = githubHandler();
+      expect(githubRes.status).toBe(302);
+
+      // Step 2: extract oauth_state from Set-Cookie
+      const setCookie = githubRes.headers.get('set-cookie') ?? '';
+      const stateMatch = setCookie.match(/oauth_state=([^;]+)/);
+      expect(stateMatch).not.toBeNull();
+      const state = stateMatch![1];
+
+      // Step 3: pass the same state to callback — should not trigger state_mismatch
+      (global.fetch as jest.Mock)
+        .mockResolvedValueOnce({
+          json: async () => ({ access_token: 'gh-token' }),
+        })
+        .mockResolvedValueOnce({
+          json: async () => ({ login: 'masaxsuzu' }),
+        });
+
+      const req = new NextRequest(
+        `http://localhost/api/auth/callback?code=test-code&state=${state}`,
+        { headers: { cookie: `oauth_state=${state}` } }
+      );
+      const callbackRes = await callbackHandler(req);
+      expect(callbackRes.status).toBe(302);
+      expect(callbackRes.headers.get('location')).toMatch(/\/$/);
+    });
+
+    it('mismatched state from github handler is rejected by callback handler', async () => {
+      // Step 1: call github handler to generate one state
+      const githubRes = githubHandler();
+      const setCookie = githubRes.headers.get('set-cookie') ?? '';
+      const stateMatch = setCookie.match(/oauth_state=([^;]+)/);
+      const state = stateMatch![1];
+
+      // Step 2: pass a different state in the query — should trigger state_mismatch
+      const req = new NextRequest(
+        `http://localhost/api/auth/callback?code=test-code&state=tampered`,
+        { headers: { cookie: `oauth_state=${state}` } }
+      );
+      const callbackRes = await callbackHandler(req);
+      expect(callbackRes.status).toBe(302);
+      expect(callbackRes.headers.get('location')).toContain(
+        'error=state_mismatch'
+      );
     });
   });
 

@@ -7,8 +7,10 @@ import { createRoot } from 'react-dom/client';
 import LoginPage from '../../app/login/page';
 import { AppProvider } from '../../contexts/AppContext';
 
+let mockSearchParams = new URLSearchParams();
+
 jest.mock('next/navigation', () => ({
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => mockSearchParams,
 }));
 
 describe('LoginPage i18n integration', () => {
@@ -18,6 +20,7 @@ describe('LoginPage i18n integration', () => {
     container = document.createElement('div');
     document.body.appendChild(container);
     localStorage.clear();
+    mockSearchParams = new URLSearchParams();
   });
 
   afterEach(() => {
@@ -93,6 +96,33 @@ describe('LoginPage i18n integration', () => {
     });
 
     expect(container.querySelector('h1')?.textContent).toBe('Welcome');
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('shows localized error message in English for access_denied', () => {
+    mockSearchParams = new URLSearchParams('error=access_denied');
+    const root = renderLogin();
+
+    expect(container.querySelector('p.text-red-400')?.textContent).toBe(
+      'Access denied'
+    );
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('shows localized error message in Japanese when lang=ja', () => {
+    localStorage.setItem('lang', 'ja');
+    mockSearchParams = new URLSearchParams('error=access_denied');
+    const root = renderLogin();
+
+    expect(container.querySelector('p.text-red-400')?.textContent).toBe(
+      'アクセスが拒否されました'
+    );
 
     act(() => {
       root.unmount();
