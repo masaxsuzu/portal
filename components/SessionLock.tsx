@@ -49,7 +49,9 @@ export default function SessionLock() {
         <h2 className="text-primary text-xl font-semibold mb-3">
           {t.sessionExpiredTitle}
         </h2>
-        <p className="text-primary/60 text-sm mb-4">{t.sessionExpiredMessage}</p>
+        <p className="text-primary/60 text-sm mb-4">
+          {t.sessionExpiredMessage}
+        </p>
         <p className="text-primary/40 text-xs">
           {t.sessionExpiredCountdown.replace('{n}', String(countdown))}
         </p>
