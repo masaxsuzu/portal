@@ -152,12 +152,10 @@ describe('proxy', () => {
       expect(res.status).toBe(200);
     });
 
-    it('should redirect /login to / (skip login page)', async () => {
+    it('should allow access to /login (show login page for bypass Enter)', async () => {
       const req = makeRequest('/login');
       const res = await proxy(req);
-      expect(res.status).toBe(307);
-      expect(res.headers.get('location')).toContain('/');
-      expect(res.headers.get('location')).not.toContain('/login');
+      expect(res.status).toBe(200);
     });
 
     it('should allow access even with an invalid cookie', async () => {

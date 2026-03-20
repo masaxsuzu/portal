@@ -60,6 +60,20 @@ describe('LoginPage', () => {
     });
   });
 
+  it('renders bypass login link when bypassMode is true', () => {
+    process.env.AUTH_BYPASS_USER = 'preview-user';
+    const root = renderLogin();
+
+    const link = container.querySelector('a[href="/api/auth/bypass"]');
+    expect(link).not.toBeNull();
+    expect(container.querySelector('a[href="/api/auth/github"]')).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    delete process.env.AUTH_BYPASS_USER;
+  });
+
   it('renders heading and subtext', () => {
     const root = renderLogin();
 
