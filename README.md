@@ -1,6 +1,6 @@
 # portal
 
-`masaxsuzu` のポートフォリオサイト。Next.js (Pages Router) + TypeScript + Tailwind CSS 製。GitHub OAuth 認証付き。
+`masaxsuzu` のポートフォリオサイト。Next.js (App Router) + TypeScript + Tailwind CSS 製。GitHub OAuth 認証付き。
 
 ## セットアップ
 
