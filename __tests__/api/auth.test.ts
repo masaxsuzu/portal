@@ -6,6 +6,8 @@ import {
   GET as callbackHandler,
   createSessionToken,
 } from '../../app/api/auth/callback/route';
+import { GET as logoutHandler } from '../../app/api/auth/logout/route';
+import { GET as bypassHandler } from '../../app/api/auth/bypass/route';
 import { NextRequest } from 'next/server';
 
 describe('/api/auth/github', () => {
@@ -240,6 +242,50 @@ describe('/api/auth/callback', () => {
 
     expect(res.status).toBe(302);
     expect(res.headers.get('location')).toContain('/login?error=access_denied');
+  });
+});
+
+describe('/api/auth/logout', () => {
+  it('should redirect to /login', () => {
+    const req = new NextRequest('http://localhost/api/auth/logout');
+    const res = logoutHandler(req);
+
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login');
+  });
+
+  it('should delete auth cookie', () => {
+    const req = new NextRequest('http://localhost/api/auth/logout', {
+      headers: { cookie: 'auth=some-token' },
+    });
+    const res = logoutHandler(req);
+
+    const cookies = res.headers.getSetCookie().join('\n');
+    expect(cookies).toContain('auth=');
+    expect(cookies).toContain('Max-Age=0');
+  });
+});
+
+describe('/api/auth/bypass', () => {
+  afterEach(() => {
+    delete process.env.AUTH_BYPASS_USER;
+  });
+
+  it('should redirect to / when AUTH_BYPASS_USER is set', () => {
+    process.env.AUTH_BYPASS_USER = 'preview-user';
+    const req = new NextRequest('http://localhost/api/auth/bypass');
+    const res = bypassHandler(req);
+
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toMatch(/\/$/);
+  });
+
+  it('should redirect to /login when AUTH_BYPASS_USER is not set', () => {
+    const req = new NextRequest('http://localhost/api/auth/bypass');
+    const res = bypassHandler(req);
+
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login');
   });
 });
 

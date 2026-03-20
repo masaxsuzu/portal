@@ -72,7 +72,6 @@ export async function proxy(request: NextRequest) {
 
   const bypassUser = process.env.AUTH_BYPASS_USER;
   if (bypassUser) {
-    if (isLoginPage) return redirect('/');
     const response = NextResponse.next({
       request: {
         headers: new Headers({

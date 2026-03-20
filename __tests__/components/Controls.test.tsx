@@ -9,6 +9,13 @@ jest.mock('../../contexts/AppContext', () => ({
   useAppContext: jest.fn(),
 }));
 
+jest.mock('next/navigation', () => ({
+  usePathname: jest.fn(() => '/'),
+}));
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { usePathname } = require('next/navigation');
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { useAppContext } = require('../../contexts/AppContext');
 
@@ -158,6 +165,48 @@ describe('Controls Component', () => {
     });
 
     expect(mockToggleLang).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('shows logout link when not on /login', () => {
+    usePathname.mockReturnValue('/');
+    useAppContext.mockReturnValue({
+      theme: 'dark',
+      toggleTheme: mockToggleTheme,
+      lang: 'en',
+      toggleLang: mockToggleLang,
+    });
+
+    const root = createRoot(container);
+    act(() => {
+      root.render(<Controls />);
+    });
+
+    expect(container.querySelector('a[aria-label="Logout"]')).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('hides logout link on /login', () => {
+    usePathname.mockReturnValue('/login');
+    useAppContext.mockReturnValue({
+      theme: 'dark',
+      toggleTheme: mockToggleTheme,
+      lang: 'en',
+      toggleLang: mockToggleLang,
+    });
+
+    const root = createRoot(container);
+    act(() => {
+      root.render(<Controls />);
+    });
+
+    expect(container.querySelector('a[aria-label="Logout"]')).toBeNull();
 
     act(() => {
       root.unmount();
