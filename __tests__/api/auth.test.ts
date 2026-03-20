@@ -6,6 +6,7 @@ import {
   GET as callbackHandler,
   createSessionToken,
 } from '../../app/api/auth/callback/route';
+import { GET as logoutHandler } from '../../app/api/auth/logout/route';
 import { NextRequest } from 'next/server';
 
 describe('/api/auth/github', () => {
@@ -240,6 +241,27 @@ describe('/api/auth/callback', () => {
 
     expect(res.status).toBe(302);
     expect(res.headers.get('location')).toContain('/login?error=access_denied');
+  });
+});
+
+describe('/api/auth/logout', () => {
+  it('should redirect to /login', () => {
+    const req = new NextRequest('http://localhost/api/auth/logout');
+    const res = logoutHandler(req);
+
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toContain('/login');
+  });
+
+  it('should delete auth cookie', () => {
+    const req = new NextRequest('http://localhost/api/auth/logout', {
+      headers: { cookie: 'auth=some-token' },
+    });
+    const res = logoutHandler(req);
+
+    const cookies = res.headers.getSetCookie().join('\n');
+    expect(cookies).toContain('auth=');
+    expect(cookies).toContain('Max-Age=0');
   });
 });
 

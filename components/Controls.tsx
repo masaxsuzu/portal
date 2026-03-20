@@ -25,6 +25,13 @@ export default function Controls() {
           <i className="fa-solid fa-moon" />
         )}
       </button>
+      <a
+        href="/api/auth/logout"
+        aria-label="Logout"
+        className="bg-cardbg border border-cardborder text-primary px-3 py-1 rounded-lg text-sm hover:border-skyblue transition-colors"
+      >
+        <i className="fa-solid fa-right-from-bracket" />
+      </a>
     </div>
   );
 }
