@@ -39,11 +39,7 @@ function GitHubIcon() {
   );
 }
 
-export default function LoginContent({
-  bypassMode,
-}: {
-  bypassMode: boolean;
-}) {
+export default function LoginContent({ bypassMode }: { bypassMode: boolean }) {
   const { t } = useAppContext();
   const searchParams = useSearchParams();
   const errorMessage = getOAuthErrorMessage(searchParams.get('error'), t);
