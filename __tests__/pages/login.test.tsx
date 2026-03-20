@@ -8,6 +8,7 @@ let mockErrorCode: string | null = null;
 jest.mock('next/navigation', () => ({
   useSearchParams: () =>
     new URLSearchParams(mockErrorCode ? `error=${mockErrorCode}` : ''),
+  usePathname: jest.fn(() => '/login'),
 }));
 
 describe('LoginPage', () => {

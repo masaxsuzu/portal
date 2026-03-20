@@ -11,6 +11,7 @@ let mockSearchParams = new URLSearchParams();
 
 jest.mock('next/navigation', () => ({
   useSearchParams: () => mockSearchParams,
+  usePathname: jest.fn(() => '/login'),
 }));
 
 describe('LoginPage i18n integration', () => {
