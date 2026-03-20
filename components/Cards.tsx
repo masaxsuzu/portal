@@ -7,7 +7,7 @@ interface CardProps {
 
 function Card({ title, url, description, titleTextClass }: CardProps) {
   return (
-    <div className="bg-cardbg flex flex-col border-2 border-cardborder py-4 px-8 rounded-2xl my-4 w-full sm:w-[360px] md:w-[320px] lg:w-[225px] xl:w-[200px] sm:mr-4 shadow-md shadow-cardbg">
+    <div className="bg-cardbg flex flex-col border-2 border-cardborder py-4 px-6 rounded-2xl shadow-md shadow-cardbg">
       <div className="flex justify-between relative">
         <span className={`text-[16px] ${titleTextClass} font-[600]`}>
           {title}
@@ -26,14 +26,14 @@ function Card({ title, url, description, titleTextClass }: CardProps) {
 
 function Cards({ data }: { data?: { title: string; data: CardProps[] } }) {
   return (
-    <>
+    <div className="w-full">
       <h2 className="text-white text-[30px] pb-6">{data?.title}</h2>
-      <div className="flex flex-wrap sm:flex-col">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.data?.map((item, idx) => (
           <Card {...item} key={idx} />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
