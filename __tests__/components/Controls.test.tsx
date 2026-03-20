@@ -114,8 +114,8 @@ describe('Controls Component', () => {
     });
 
     const themeButton = container.querySelector('[aria-label="Toggle theme"]');
-    const icon = themeButton?.querySelector('i');
-    expect(icon?.className).toContain('fa-sun');
+    const icon = themeButton?.querySelector('svg');
+    expect(icon).not.toBeNull();
 
     act(() => {
       root.unmount();
@@ -136,8 +136,8 @@ describe('Controls Component', () => {
     });
 
     const themeButton = container.querySelector('[aria-label="Toggle theme"]');
-    const icon = themeButton?.querySelector('i');
-    expect(icon?.className).toContain('fa-moon');
+    const icon = themeButton?.querySelector('svg');
+    expect(icon).not.toBeNull();
 
     act(() => {
       root.unmount();

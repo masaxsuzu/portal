@@ -26,17 +26,10 @@ body {
   margin: 0;
   font-family:
     'Inter',
-    sans-serif,
     -apple-system,
     BlinkMacSystemFont,
     Segoe UI,
     Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    Fira Sans,
-    Droid Sans,
-    Helvetica Neue,
     sans-serif;
   background: var(--color-background);
   transition:
