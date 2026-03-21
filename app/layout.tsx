@@ -12,6 +12,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   viewportFit: 'cover',
+  // Default to dark; Controls.tsx updates this dynamically when theme changes.
+  themeColor: '#13111a',
 };
 
 export default async function RootLayout({

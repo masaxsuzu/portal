@@ -1,7 +1,7 @@
 'use client';
 
 import type { Dispatch, SetStateAction } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAppContext } from '../contexts/AppContext';
 
@@ -90,14 +90,28 @@ export default function Controls({
   const { theme, toggleTheme, lang, toggleLang, t } = useAppContext();
   const pathname = usePathname();
 
+  // Sync address-bar color (Safari / Chrome on Android)
+  useEffect(() => {
+    const color = theme === 'light' ? '#f5f4fb' : '#13111a';
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', color);
+  }, [theme]);
+
   return (
     <>
       {/* Fixed header — height = safe-area-inset-top + 3.5rem (h-14) */}
       <header
-        className={`fixed top-0 inset-x-0 z-30 pt-[var(--sat)] transition-colors duration-200 ${
+        className={`fixed top-0 inset-x-0 z-30 transition-colors duration-200 ${
           isOpen ? 'bg-background border-b border-cardborder' : ''
         }`}
       >
+        {/*
+         * Always-visible notch / status-bar fill.
+         * Sits at the very top; height = env(safe-area-inset-top).
+         * On Chrome (no notch) this collapses to 0 and is invisible.
+         */}
+        <div className="bg-background h-[var(--sat)]" />
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Open menu"
