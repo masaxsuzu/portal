@@ -65,15 +65,27 @@ export default function Controls() {
 
   return (
     <>
-      {/* Fixed header bar */}
-      <header className="fixed top-0 inset-x-0 h-14 z-30 bg-background border-b border-cardborder">
+      {/* Fixed header bar — solid when open, transparent when closed */}
+      <header
+        className={`fixed top-0 inset-x-0 h-14 z-30 transition-colors duration-200 ${
+          isOpen ? 'bg-background border-b border-cardborder' : ''
+        }`}
+      >
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Open menu"
           aria-expanded={isOpen}
           className="flex items-center justify-center w-14 h-14 text-primary hover:opacity-70 transition-opacity"
         >
-          <HamburgerIcon />
+          <span
+            className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors duration-200 ${
+              !isOpen
+                ? 'bg-background/60 backdrop-blur-md shadow-sm'
+                : ''
+            }`}
+          >
+            <HamburgerIcon />
+          </span>
         </button>
       </header>
 
