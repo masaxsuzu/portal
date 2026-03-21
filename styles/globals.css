@@ -50,3 +50,14 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Safe-area utilities — env() を Tailwind arbitrary value 経由にせず直接定義 */
+.h-sat {
+  height: env(safe-area-inset-top, 0px);
+}
+.pt-sat {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pt-header-sat {
+  padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+}

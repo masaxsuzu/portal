@@ -110,7 +110,7 @@ export default function Controls({
       {/* Fixed header — always transparent; notch spacer positions button below status bar */}
       <header className="fixed top-0 inset-x-0 z-30">
         {/* Spacer = env(safe-area-inset-top): no bg — drawer/backdrop cover the notch when open */}
-        <div className="h-[var(--sat)]" />
+        <div className="h-sat" />
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Open menu"
@@ -139,7 +139,7 @@ export default function Controls({
           {/* Drawer — full height from top:0; bg-cardbg fills status bar area on the left */}
           <div className="fixed inset-y-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
             {/* Header — pt-[var(--sat)] pushes X button below status bar */}
-            <div className="flex items-center border-b border-cardborder shrink-0 pt-[var(--sat)]">
+            <div className="flex items-center border-b border-cardborder shrink-0 pt-sat">
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"
