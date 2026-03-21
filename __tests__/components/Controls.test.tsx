@@ -300,7 +300,9 @@ describe('Controls Component', () => {
 
     act(() => {
       (
-        container.querySelector('[aria-label="Close menu"]') as HTMLButtonElement
+        container.querySelector(
+          '[aria-label="Close menu"]'
+        ) as HTMLButtonElement
       ).click();
     });
 
