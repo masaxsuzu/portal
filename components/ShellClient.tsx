@@ -22,9 +22,7 @@ export default function ShellClient({
     <div className="flex flex-col flex-1">
       <Controls isOpen={isOpen} setIsOpen={setIsOpen} />
       {/* pt = h-14 (3.5rem) + safe-area-inset-top */}
-      <main className="flex flex-col flex-1 pt-header-sat">
-        {children}
-      </main>
+      <main className="flex flex-col flex-1 pt-header-sat">{children}</main>
     </div>
   );
 }
