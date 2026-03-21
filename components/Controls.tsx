@@ -59,18 +59,18 @@ const LogoutIcon = () => (
 );
 
 export default function Controls() {
-  const { theme, toggleTheme, lang, toggleLang } = useAppContext();
+  const { theme, toggleTheme, lang, toggleLang, t } = useAppContext();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      {/* Hamburger button */}
+      {/* Hamburger button — h-14 matches drawer header height */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Open menu"
         aria-expanded={isOpen}
-        className="fixed top-4 left-4 z-50 bg-cardbg border border-cardborder text-primary w-9 h-9 rounded-lg flex items-center justify-center hover:border-skyblue transition-colors"
+        className="fixed top-0 left-0 z-[51] flex items-center justify-center w-14 h-14 text-primary hover:opacity-70 transition-opacity"
       >
         <HamburgerIcon />
       </button>
@@ -84,38 +84,38 @@ export default function Controls() {
           />
 
           {/* Drawer */}
-          <div className="fixed inset-y-0 left-0 z-50 w-60 bg-cardbg shadow-2xl flex flex-col">
-            {/* Drawer header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-cardborder">
-              <span className="text-primary text-sm font-semibold tracking-wide uppercase opacity-60">
-                Menu
+          <div className="fixed inset-y-0 left-0 z-50 w-60 h-screen bg-cardbg shadow-2xl flex flex-col">
+            {/* Header — same h-14 as button, left-pad clears button area */}
+            <div className="h-14 flex items-center pl-14 pr-4 border-b border-cardborder shrink-0">
+              <span className="text-primary text-xs font-semibold tracking-widest uppercase opacity-50">
+                {t.menuTitle}
               </span>
             </div>
 
             {/* Menu items */}
-            <nav className="flex flex-col py-2">
+            <nav className="flex flex-col flex-1 overflow-y-auto py-2">
               {/* Language */}
               <button
                 onClick={toggleLang}
                 aria-label="Toggle language"
-                className="flex items-center justify-between px-5 py-3.5 text-primary hover:bg-background transition-colors"
+                className="flex items-center justify-between px-5 py-4 text-primary hover:bg-background transition-colors"
               >
-                <span className="text-sm">Language</span>
+                <span className="text-sm">{t.menuLanguage}</span>
                 <span className="text-sm font-semibold">
                   {lang.toUpperCase()}
                 </span>
               </button>
 
-              {/* Dark mode */}
+              {/* Dark / Light mode */}
               <button
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
                 role="switch"
                 aria-checked={theme === 'dark'}
-                className="flex items-center justify-between px-5 py-3.5 text-primary hover:bg-background transition-colors"
+                className="flex items-center justify-between px-5 py-4 text-primary hover:bg-background transition-colors"
               >
                 <span className="text-sm">
-                  {theme === 'dark' ? 'Dark' : 'Light'}
+                  {theme === 'dark' ? t.menuDark : t.menuLight}
                 </span>
                 {theme === 'dark' ? <MoonIcon /> : <SunIcon />}
               </button>
@@ -127,9 +127,9 @@ export default function Controls() {
                   <a
                     href="/api/auth/logout"
                     aria-label="Logout"
-                    className="flex items-center justify-between px-5 py-3.5 text-primary hover:text-skyblue transition-colors"
+                    className="flex items-center justify-between px-5 py-4 text-primary hover:text-skyblue transition-colors"
                   >
-                    <span className="text-sm">Logout</span>
+                    <span className="text-sm">{t.menuLogout}</span>
                     <LogoutIcon />
                   </a>
                 </>

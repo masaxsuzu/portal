@@ -1,6 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import Controls from '../../components/Controls';
+import { translations } from '../../lib/i18n';
 
 const mockToggleTheme = jest.fn();
 const mockToggleLang = jest.fn();
@@ -32,6 +33,7 @@ describe('Controls Component', () => {
       toggleTheme: mockToggleTheme,
       lang: 'en',
       toggleLang: mockToggleLang,
+      t: translations.en,
     });
   });
 
@@ -120,6 +122,7 @@ describe('Controls Component', () => {
       toggleTheme: mockToggleTheme,
       lang: 'ja',
       toggleLang: mockToggleLang,
+      t: translations.ja,
     });
 
     const root = createRoot(container);
@@ -162,6 +165,7 @@ describe('Controls Component', () => {
       toggleTheme: mockToggleTheme,
       lang: 'en',
       toggleLang: mockToggleLang,
+      t: translations.en,
     });
 
     const root = createRoot(container);
