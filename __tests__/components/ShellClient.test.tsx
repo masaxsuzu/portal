@@ -29,11 +29,22 @@ describe('ShellClient', () => {
   beforeEach(() => {
     container = document.createElement('div');
     document.body.appendChild(container);
+    document.body.style.overflow = '';
   });
 
   afterEach(() => {
     document.body.removeChild(container);
+    document.body.style.overflow = '';
   });
+
+  const openMenu = (root: ReturnType<typeof createRoot>) => {
+    void root;
+    act(() => {
+      (
+        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
+      ).click();
+    });
+  };
 
   it('renders Controls and children', () => {
     const root = createRoot(container);
@@ -76,11 +87,7 @@ describe('ShellClient', () => {
       root.render(<ShellClient>content</ShellClient>);
     });
 
-    act(() => {
-      (
-        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
-      ).click();
-    });
+    openMenu(root);
 
     expect(
       container
@@ -93,77 +100,54 @@ describe('ShellClient', () => {
     });
   });
 
-  it('main has translate-x-60 class when menu is open', () => {
+  it('locks body scroll when menu opens', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<ShellClient>content</ShellClient>);
     });
 
-    act(() => {
-      (
-        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
-      ).click();
-    });
-
-    const main = container.querySelector('main');
-    expect(main?.className).toContain('translate-x-60');
+    openMenu(root);
+    expect(document.body.style.overflow).toBe('hidden');
 
     act(() => {
       root.unmount();
     });
   });
 
-  it('clicking main when closed does not change state', () => {
+  it('restores body scroll when menu closes', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<ShellClient>content</ShellClient>);
     });
 
-    act(() => {
-      (container.querySelector('main') as HTMLElement).click();
-    });
+    openMenu(root);
+    expect(document.body.style.overflow).toBe('hidden');
 
-    expect(
-      container
-        .querySelector('[data-testid="controls"]')
-        ?.getAttribute('data-open')
-    ).toBe('false');
+    // close via toggle
+    act(() => {
+      (
+        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
+      ).click();
+    });
+    expect(document.body.style.overflow).toBe('');
 
     act(() => {
       root.unmount();
     });
   });
 
-  it('clicking main closes the menu', () => {
+  it('restores body scroll on unmount', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<ShellClient>content</ShellClient>);
     });
 
-    // open
-    act(() => {
-      (
-        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
-      ).click();
-    });
-    expect(
-      container
-        .querySelector('[data-testid="controls"]')
-        ?.getAttribute('data-open')
-    ).toBe('true');
-
-    // click main to close
-    act(() => {
-      (container.querySelector('main') as HTMLElement).click();
-    });
-    expect(
-      container
-        .querySelector('[data-testid="controls"]')
-        ?.getAttribute('data-open')
-    ).toBe('false');
+    openMenu(root);
+    expect(document.body.style.overflow).toBe('hidden');
 
     act(() => {
       root.unmount();
     });
+    expect(document.body.style.overflow).toBe('');
   });
 });

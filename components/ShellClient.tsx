@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Controls from './Controls';
 
 export default function ShellClient({
@@ -10,21 +10,18 @@ export default function ShellClient({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <div className="overflow-x-hidden flex flex-col flex-1">
-      <Controls isOpen={isOpen} setIsOpen={setIsOpen} />
+  // Lock body scroll while the menu is open (JS required — no pure-CSS way)
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
-      {/* Content area — pushed right when menu opens */}
-      <main
-        className={`flex flex-col flex-1 pt-14 transition-all duration-300 ease-in-out ${
-          isOpen ? 'translate-x-60 shadow-[-20px_0_48px_rgba(0,0,0,0.25)]' : ''
-        }`}
-        onClick={() => {
-          if (isOpen) setIsOpen(false);
-        }}
-      >
-        {children}
-      </main>
+  return (
+    <div className="flex flex-col flex-1">
+      <Controls isOpen={isOpen} setIsOpen={setIsOpen} />
+      <main className="flex flex-col flex-1 pt-14">{children}</main>
     </div>
   );
 }

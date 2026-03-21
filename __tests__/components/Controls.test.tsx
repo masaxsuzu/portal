@@ -261,17 +261,52 @@ describe('Controls Component', () => {
     });
   });
 
-  it('has no backdrop overlay (push design — no backdrop)', () => {
+  it('closes menu when backdrop is clicked', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
 
     openMenu();
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).not.toBeNull();
 
-    // Push design removes the backdrop; closing is handled by clicking the
-    // pushed content area (managed in ShellClient, not Controls).
-    expect(container.querySelector('.bg-black\\/40')).toBeNull();
+    act(() => {
+      (
+        container.querySelector('[data-testid="backdrop"]') as HTMLDivElement
+      ).click();
+    });
+
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('closes menu when X button is clicked', () => {
+    const root = createRoot(container);
+    act(() => {
+      root.render(<Controls />);
+    });
+
+    openMenu();
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).not.toBeNull();
+
+    act(() => {
+      (
+        container.querySelector('[aria-label="Close menu"]') as HTMLButtonElement
+      ).click();
+    });
+
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).toBeNull();
 
     act(() => {
       root.unmount();

@@ -10,6 +10,22 @@ interface Props {
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
+const XIcon = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
+    <line x1="1" y1="1" x2="13" y2="13" />
+    <line x1="13" y1="1" x2="1" y2="13" />
+  </svg>
+);
+
 const HamburgerIcon = () => (
   <svg
     width="18"
@@ -98,18 +114,26 @@ export default function Controls({
         </button>
       </header>
 
-      {/* Drawer wrapper — always in DOM for CSS slide transition */}
-      <div
-        className={`fixed inset-y-0 left-0 z-40 w-60 bg-cardbg flex flex-col transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-        }`}
-        aria-hidden={!isOpen}
-      >
-        {/* Content renders only when open (keeps tests compatible) */}
-        {isOpen && (
-          <>
-            {/* Header — same h-14 as button, left-pad clears button area */}
-            <div className="h-14 flex items-center pl-14 pr-4 border-b border-cardborder shrink-0">
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            data-testid="backdrop"
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Drawer */}
+          <div className="fixed inset-y-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
+            {/* Header — X button (same position as hamburger) + title */}
+            <div className="h-14 flex items-center border-b border-cardborder shrink-0">
+              <button
+                onClick={() => setIsOpen(false)}
+                aria-label="Close menu"
+                className="flex items-center justify-center w-14 h-14 text-primary hover:opacity-70 transition-opacity"
+              >
+                <XIcon />
+              </button>
               <span className="text-primary text-xs font-semibold tracking-widest uppercase opacity-50">
                 {t.menuTitle}
               </span>
@@ -156,9 +180,9 @@ export default function Controls({
                 </>
               )}
             </nav>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
