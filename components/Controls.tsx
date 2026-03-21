@@ -100,18 +100,10 @@ export default function Controls({
 
   return (
     <>
-      {/* Fixed header — height = safe-area-inset-top + 3.5rem (h-14) */}
-      <header
-        className={`fixed top-0 inset-x-0 z-30 transition-colors duration-200 ${
-          isOpen ? 'bg-background border-b border-cardborder' : ''
-        }`}
-      >
-        {/*
-         * Always-visible notch / status-bar fill.
-         * Sits at the very top; height = env(safe-area-inset-top).
-         * On Chrome (no notch) this collapses to 0 and is invisible.
-         */}
-        <div className="bg-background h-[var(--sat)]" />
+      {/* Fixed header — always transparent; notch fill only when menu is closed */}
+      <header className="fixed top-0 inset-x-0 z-30">
+        {/* Notch fill: visible when closed, hidden when open (menu takes over that space) */}
+        {!isOpen && <div className="bg-background h-[var(--sat)]" />}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Open menu"
@@ -130,17 +122,17 @@ export default function Controls({
 
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — starts below notch, theme-colored shadow */}
           <div
             data-testid="backdrop"
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed top-[var(--sat)] inset-x-0 bottom-0 bg-background/75 backdrop-blur-sm z-40"
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Drawer */}
-          <div className="fixed inset-y-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
-            {/* Header — X button aligned with hamburger; safe-area pushes both down equally */}
-            <div className="flex items-center border-b border-cardborder shrink-0 pt-[var(--sat)]">
+          {/* Drawer — starts below notch, full height below it */}
+          <div className="fixed top-[var(--sat)] bottom-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
+            {/* Header — X button row; no safe-area padding (drawer already starts below notch) */}
+            <div className="flex items-center border-b border-cardborder shrink-0">
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"
