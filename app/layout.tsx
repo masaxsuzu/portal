@@ -3,7 +3,7 @@ import Script from 'next/script';
 import { headers } from 'next/headers';
 import '../styles/globals.css';
 import { AppProvider } from '../contexts/AppContext';
-import Controls from '../components/Controls';
+import ShellClient from '../components/ShellClient';
 
 export const metadata: Metadata = {
   title: 'masaxsuzu',
@@ -39,8 +39,7 @@ export default async function RootLayout({
       </head>
       <body className="flex flex-col min-h-dvh bg-background">
         <AppProvider>
-          <Controls />
-          <main className="flex flex-col flex-1 pt-14">{children}</main>
+          <ShellClient>{children}</ShellClient>
         </AppProvider>
       </body>
     </html>

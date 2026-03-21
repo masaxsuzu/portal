@@ -1,8 +1,14 @@
 'use client';
 
+import type { Dispatch, SetStateAction } from 'react';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAppContext } from '../contexts/AppContext';
+
+interface Props {
+  isOpen?: boolean;
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
+}
 
 const HamburgerIcon = () => (
   <svg
@@ -58,10 +64,12 @@ const LogoutIcon = () => (
   </svg>
 );
 
-export default function Controls() {
+export default function Controls({ isOpen: isOpenProp, setIsOpen: setIsOpenProp }: Props = {}) {
+  const [isOpenInternal, setIsOpenInternal] = useState(false);
+  const isOpen = isOpenProp ?? isOpenInternal;
+  const setIsOpen = setIsOpenProp ?? setIsOpenInternal;
   const { theme, toggleTheme, lang, toggleLang, t } = useAppContext();
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -87,16 +95,16 @@ export default function Controls() {
         </button>
       </header>
 
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/40 z-40"
-            onClick={() => setIsOpen(false)}
-          />
-
-          {/* Drawer */}
-          <div className="fixed inset-y-0 left-0 z-[51] w-60 bg-cardbg shadow-2xl flex flex-col">
+      {/* Drawer wrapper — always in DOM for CSS slide transition */}
+      <div
+        className={`fixed inset-y-0 left-0 z-40 w-60 bg-cardbg flex flex-col transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        }`}
+        aria-hidden={!isOpen}
+      >
+        {/* Content renders only when open (keeps tests compatible) */}
+        {isOpen && (
+          <>
             {/* Header — same h-14 as button, left-pad clears button area */}
             <div className="h-14 flex items-center pl-14 pr-4 border-b border-cardborder shrink-0">
               <span className="text-primary text-xs font-semibold tracking-widest uppercase opacity-50">
@@ -145,9 +153,9 @@ export default function Controls() {
                 </>
               )}
             </nav>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </>
   );
 }
