@@ -90,21 +90,27 @@ export default function Controls({
   const { theme, toggleTheme, lang, toggleLang, t } = useAppContext();
   const pathname = usePathname();
 
-  // Sync address-bar color (Safari / Chrome on Android)
+  // Sync address-bar / browser-chrome color (Safari / Chrome on Android).
+  // When menu is open use cardbg (drawer color) so the status bar & address bar
+  // match the drawer background. Revert to background color when closed.
   useEffect(() => {
-    const color = theme === 'light' ? '#f5f4fb' : '#13111a';
+    let color: string;
+    if (isOpen) {
+      color = theme === 'light' ? '#eceaf5' : '#1d1a27';
+    } else {
+      color = theme === 'light' ? '#f5f4fb' : '#13111a';
+    }
     document
       .querySelector('meta[name="theme-color"]')
       ?.setAttribute('content', color);
-  }, [theme]);
+  }, [theme, isOpen]);
 
   return (
     <>
-      {/* Fixed header — always transparent; notch fill only when menu is closed */}
+      {/* Fixed header — always transparent; notch spacer positions button below status bar */}
       <header className="fixed top-0 inset-x-0 z-30">
-        {/* Notch spacer: always pushes button below notch.
-            bg-background only when menu is open (reverts on X / close). */}
-        <div className={`h-[var(--sat)] ${isOpen ? 'bg-background' : ''}`} />
+        {/* Spacer = env(safe-area-inset-top): no bg — drawer/backdrop cover the notch when open */}
+        <div className="h-[var(--sat)]" />
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Open menu"
@@ -123,17 +129,17 @@ export default function Controls({
 
       {isOpen && (
         <>
-          {/* Backdrop — starts below notch, theme-colored shadow */}
+          {/* Backdrop — full screen; bg-cardbg/bg-cardborder visible behind status bar on right */}
           <div
             data-testid="backdrop"
-            className="fixed top-[var(--sat)] inset-x-0 bottom-0 bg-background/75 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-background/75 backdrop-blur-sm z-40"
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Drawer — starts below notch, full height below it */}
-          <div className="fixed top-[var(--sat)] bottom-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
-            {/* Header — X button row; no safe-area padding (drawer already starts below notch) */}
-            <div className="flex items-center border-b border-cardborder shrink-0">
+          {/* Drawer — full height from top:0; bg-cardbg fills status bar area on the left */}
+          <div className="fixed inset-y-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
+            {/* Header — pt-[var(--sat)] pushes X button below status bar */}
+            <div className="flex items-center border-b border-cardborder shrink-0 pt-[var(--sat)]">
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"
