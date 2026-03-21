@@ -71,24 +71,10 @@ describe('HomePage', () => {
     act(() => root.unmount());
   });
 
-  it('renders Controls', () => {
+  it('does not render Controls (moved to layout)', () => {
     const root = renderHome();
-
-    const hamburger = container.querySelector(
-      '[aria-label="Open menu"]'
-    ) as HTMLButtonElement;
-    expect(hamburger).not.toBeNull();
-
-    act(() => {
-      hamburger.click();
-    });
-
-    expect(
-      container.querySelector('[aria-label="Toggle language"]')
-    ).not.toBeNull();
-    expect(
-      container.querySelector('[aria-label="Toggle theme"]')
-    ).not.toBeNull();
+    // Controls is now rendered in layout.tsx, not in HomePage directly
+    expect(container.querySelector('[aria-label="Open menu"]')).toBeNull();
     act(() => root.unmount());
   });
 });

@@ -5,6 +5,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoginPage from '../../app/login/page';
+import Controls from '../../components/Controls';
 import { AppProvider } from '../../contexts/AppContext';
 
 let mockSearchParams = new URLSearchParams();
@@ -34,6 +35,7 @@ describe('LoginPage i18n integration', () => {
     act(() => {
       root.render(
         <AppProvider>
+          <Controls />
           <LoginPage />
         </AppProvider>
       );

@@ -65,15 +65,17 @@ export default function Controls() {
 
   return (
     <>
-      {/* Hamburger button — h-14 matches drawer header height */}
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-label="Open menu"
-        aria-expanded={isOpen}
-        className="fixed top-0 left-0 z-[51] flex items-center justify-center w-14 h-14 text-primary hover:opacity-70 transition-opacity"
-      >
-        <HamburgerIcon />
-      </button>
+      {/* Fixed header bar */}
+      <header className="fixed top-0 inset-x-0 h-14 z-30 bg-background border-b border-cardborder">
+        <button
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label="Open menu"
+          aria-expanded={isOpen}
+          className="flex items-center justify-center w-14 h-14 text-primary hover:opacity-70 transition-opacity"
+        >
+          <HamburgerIcon />
+        </button>
+      </header>
 
       {isOpen && (
         <>
@@ -84,7 +86,7 @@ export default function Controls() {
           />
 
           {/* Drawer */}
-          <div className="fixed inset-y-0 left-0 z-50 w-60 h-dvh bg-cardbg shadow-2xl flex flex-col">
+          <div className="fixed inset-y-0 left-0 z-[51] w-60 h-dvh bg-cardbg shadow-2xl flex flex-col">
             {/* Header — same h-14 as button, left-pad clears button area */}
             <div className="h-14 flex items-center pl-14 pr-4 border-b border-cardborder shrink-0">
               <span className="text-primary text-xs font-semibold tracking-widest uppercase opacity-50">

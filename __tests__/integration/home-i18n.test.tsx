@@ -5,6 +5,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import HomePage from '../../app/page';
+import Controls from '../../components/Controls';
 import { AppProvider } from '../../contexts/AppContext';
 
 describe('HomePage i18n integration', () => {
@@ -26,6 +27,7 @@ describe('HomePage i18n integration', () => {
     act(() => {
       root.render(
         <AppProvider>
+          <Controls />
           <HomePage />
         </AppProvider>
       );
