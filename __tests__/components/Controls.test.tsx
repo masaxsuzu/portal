@@ -54,9 +54,7 @@ describe('Controls Component', () => {
       root.render(<Controls />);
     });
 
-    expect(
-      container.querySelector('[aria-label="Open menu"]')
-    ).not.toBeNull();
+    expect(container.querySelector('[aria-label="Open menu"]')).not.toBeNull();
 
     act(() => {
       root.unmount();
