@@ -79,9 +79,7 @@ export default function Controls() {
         >
           <span
             className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors duration-200 ${
-              !isOpen
-                ? 'bg-background/60 backdrop-blur-md shadow-sm'
-                : ''
+              !isOpen ? 'bg-background/60 backdrop-blur-md shadow-sm' : ''
             }`}
           >
             <HamburgerIcon />
