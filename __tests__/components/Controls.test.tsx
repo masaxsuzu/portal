@@ -27,27 +27,71 @@ describe('Controls Component', () => {
     document.body.appendChild(container);
     mockToggleTheme.mockClear();
     mockToggleLang.mockClear();
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  it('renders both toggle buttons', () => {
     useAppContext.mockReturnValue({
       theme: 'dark',
       toggleTheme: mockToggleTheme,
       lang: 'en',
       toggleLang: mockToggleLang,
     });
+  });
 
+  afterEach(() => {
+    document.body.removeChild(container);
+  });
+
+  const openMenu = () => {
+    const hamburger = container.querySelector(
+      '[aria-label="Open menu"]'
+    ) as HTMLButtonElement;
+    act(() => {
+      hamburger.click();
+    });
+  };
+
+  it('renders hamburger button', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
 
-    const buttons = container.querySelectorAll('button');
-    expect(buttons).toHaveLength(2);
+    expect(
+      container.querySelector('[aria-label="Open menu"]')
+    ).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('menu is closed by default', () => {
+    const root = createRoot(container);
+    act(() => {
+      root.render(<Controls />);
+    });
+
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it('opens menu when hamburger is clicked', () => {
+    const root = createRoot(container);
+    act(() => {
+      root.render(<Controls />);
+    });
+
+    openMenu();
+
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).not.toBeNull();
+    expect(
+      container.querySelector('[aria-label="Toggle theme"]')
+    ).not.toBeNull();
 
     act(() => {
       root.unmount();
@@ -55,17 +99,12 @@ describe('Controls Component', () => {
   });
 
   it('shows JA button when lang is en', () => {
-    useAppContext.mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-      lang: 'en',
-      toggleLang: mockToggleLang,
-    });
-
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
+
+    openMenu();
 
     const langButton = container.querySelector(
       '[aria-label="Toggle language"]'
@@ -90,6 +129,8 @@ describe('Controls Component', () => {
       root.render(<Controls />);
     });
 
+    openMenu();
+
     const langButton = container.querySelector(
       '[aria-label="Toggle language"]'
     );
@@ -100,29 +141,24 @@ describe('Controls Component', () => {
     });
   });
 
-  it('renders sun icon in dark mode', () => {
-    useAppContext.mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-      lang: 'en',
-      toggleLang: mockToggleLang,
-    });
-
+  it('renders theme toggle with switch role in dark mode', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
 
+    openMenu();
+
     const themeButton = container.querySelector('[aria-label="Toggle theme"]');
-    const icon = themeButton?.querySelector('svg');
-    expect(icon).not.toBeNull();
+    expect(themeButton?.getAttribute('role')).toBe('switch');
+    expect(themeButton?.getAttribute('aria-checked')).toBe('true');
 
     act(() => {
       root.unmount();
     });
   });
 
-  it('renders moon icon in light mode', () => {
+  it('renders theme toggle as unchecked in light mode', () => {
     useAppContext.mockReturnValue({
       theme: 'light',
       toggleTheme: mockToggleTheme,
@@ -135,9 +171,10 @@ describe('Controls Component', () => {
       root.render(<Controls />);
     });
 
+    openMenu();
+
     const themeButton = container.querySelector('[aria-label="Toggle theme"]');
-    const icon = themeButton?.querySelector('svg');
-    expect(icon).not.toBeNull();
+    expect(themeButton?.getAttribute('aria-checked')).toBe('false');
 
     act(() => {
       root.unmount();
@@ -145,17 +182,12 @@ describe('Controls Component', () => {
   });
 
   it('calls toggleLang when lang button is clicked', () => {
-    useAppContext.mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-      lang: 'en',
-      toggleLang: mockToggleLang,
-    });
-
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
+
+    openMenu();
 
     const langButton = container.querySelector(
       '[aria-label="Toggle language"]'
@@ -171,19 +203,37 @@ describe('Controls Component', () => {
     });
   });
 
+  it('calls toggleTheme when theme button is clicked', () => {
+    const root = createRoot(container);
+    act(() => {
+      root.render(<Controls />);
+    });
+
+    openMenu();
+
+    const themeButton = container.querySelector(
+      '[aria-label="Toggle theme"]'
+    ) as HTMLButtonElement;
+    act(() => {
+      themeButton.click();
+    });
+
+    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
   it('shows logout link when not on /login', () => {
     usePathname.mockReturnValue('/');
-    useAppContext.mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-      lang: 'en',
-      toggleLang: mockToggleLang,
-    });
 
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
+
+    openMenu();
 
     expect(container.querySelector('a[aria-label="Logout"]')).not.toBeNull();
 
@@ -194,17 +244,13 @@ describe('Controls Component', () => {
 
   it('hides logout link on /login', () => {
     usePathname.mockReturnValue('/login');
-    useAppContext.mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-      lang: 'en',
-      toggleLang: mockToggleLang,
-    });
 
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
+
+    openMenu();
 
     expect(container.querySelector('a[aria-label="Logout"]')).toBeNull();
 
@@ -213,27 +259,28 @@ describe('Controls Component', () => {
     });
   });
 
-  it('calls toggleTheme when theme button is clicked', () => {
-    useAppContext.mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-      lang: 'en',
-      toggleLang: mockToggleLang,
-    });
-
+  it('closes menu when hamburger is clicked again', () => {
     const root = createRoot(container);
     act(() => {
       root.render(<Controls />);
     });
 
-    const themeButton = container.querySelector(
-      '[aria-label="Toggle theme"]'
+    openMenu();
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).not.toBeNull();
+
+    // click again to close
+    const hamburger = container.querySelector(
+      '[aria-label="Open menu"]'
     ) as HTMLButtonElement;
     act(() => {
-      themeButton.click();
+      hamburger.click();
     });
 
-    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
+    expect(
+      container.querySelector('[aria-label="Toggle language"]')
+    ).toBeNull();
 
     act(() => {
       root.unmount();

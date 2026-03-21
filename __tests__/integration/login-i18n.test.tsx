@@ -41,6 +41,15 @@ describe('LoginPage i18n integration', () => {
     return root;
   }
 
+  function openMenu() {
+    const hamburger = container.querySelector(
+      '[aria-label="Open menu"]'
+    ) as HTMLButtonElement;
+    act(() => {
+      hamburger.click();
+    });
+  }
+
   it('renders English text by default', () => {
     const root = renderLogin();
 
@@ -80,7 +89,8 @@ describe('LoginPage i18n integration', () => {
     // Starts in English
     expect(container.querySelector('h1')?.textContent).toBe('Welcome');
 
-    // Click language toggle
+    // Open menu then click language toggle
+    openMenu();
     const langBtn = container.querySelector(
       '[aria-label="Toggle language"]'
     ) as HTMLButtonElement;
@@ -133,6 +143,7 @@ describe('LoginPage i18n integration', () => {
   it('persists language choice to localStorage after toggle', () => {
     const root = renderLogin();
 
+    openMenu();
     const langBtn = container.querySelector(
       '[aria-label="Toggle language"]'
     ) as HTMLButtonElement;

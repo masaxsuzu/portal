@@ -33,6 +33,15 @@ describe('HomePage i18n integration', () => {
     return root;
   }
 
+  function openMenu() {
+    const hamburger = container.querySelector(
+      '[aria-label="Open menu"]'
+    ) as HTMLButtonElement;
+    act(() => {
+      hamburger.click();
+    });
+  }
+
   it('renders English bio and section titles by default', () => {
     const root = renderHome();
 
@@ -63,6 +72,8 @@ describe('HomePage i18n integration', () => {
 
     expect(container.textContent).toContain('About Me');
 
+    openMenu();
+
     const langBtn = container.querySelector(
       '[aria-label="Toggle language"]'
     ) as HTMLButtonElement;
@@ -86,6 +97,8 @@ describe('HomePage i18n integration', () => {
   it('always renders masaxsuzu name regardless of language', () => {
     const root = renderHome();
     expect(container.textContent).toContain('masaxsuzu');
+
+    openMenu();
 
     const langBtn = container.querySelector(
       '[aria-label="Toggle language"]'
@@ -129,6 +142,8 @@ describe('HomePage i18n integration', () => {
 
     expect(document.documentElement.classList.contains('dark')).toBe(true);
 
+    openMenu();
+
     const themeBtn = container.querySelector(
       '[aria-label="Toggle theme"]'
     ) as HTMLButtonElement;
@@ -143,6 +158,8 @@ describe('HomePage i18n integration', () => {
 
   it('toggles theme back to dark', () => {
     const root = renderHome();
+
+    openMenu();
 
     const themeBtn = container.querySelector(
       '[aria-label="Toggle theme"]'

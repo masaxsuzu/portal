@@ -73,6 +73,16 @@ describe('HomePage', () => {
 
   it('renders Controls', () => {
     const root = renderHome();
+
+    const hamburger = container.querySelector(
+      '[aria-label="Open menu"]'
+    ) as HTMLButtonElement;
+    expect(hamburger).not.toBeNull();
+
+    act(() => {
+      hamburger.click();
+    });
+
     expect(
       container.querySelector('[aria-label="Toggle language"]')
     ).not.toBeNull();
