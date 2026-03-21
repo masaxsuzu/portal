@@ -3,6 +3,9 @@
 @config "../tailwind.config.ts";
 
 :root {
+  /* Safe-area inset top (for notch / Dynamic Island on iOS Safari) */
+  --sat: env(safe-area-inset-top, 0px);
+
   /* Dark theme (default) */
   --color-background: #13111a;
   --color-primary: #b7b4c7;

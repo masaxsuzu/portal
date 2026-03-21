@@ -92,9 +92,9 @@ export default function Controls({
 
   return (
     <>
-      {/* Fixed header bar — solid when open, transparent when closed */}
+      {/* Fixed header — height = safe-area-inset-top + 3.5rem (h-14) */}
       <header
-        className={`fixed top-0 inset-x-0 h-14 z-30 transition-colors duration-200 ${
+        className={`fixed top-0 inset-x-0 z-30 pt-[var(--sat)] transition-colors duration-200 ${
           isOpen ? 'bg-background border-b border-cardborder' : ''
         }`}
       >
@@ -125,8 +125,8 @@ export default function Controls({
 
           {/* Drawer */}
           <div className="fixed inset-y-0 left-0 z-50 w-72 bg-cardbg shadow-2xl flex flex-col">
-            {/* Header — X button (same position as hamburger) + title */}
-            <div className="h-14 flex items-center border-b border-cardborder shrink-0">
+            {/* Header — X button aligned with hamburger; safe-area pushes both down equally */}
+            <div className="flex items-center border-b border-cardborder shrink-0 pt-[var(--sat)]">
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"

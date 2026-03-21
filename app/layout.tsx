@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { headers } from 'next/headers';
 import '../styles/globals.css';
@@ -8,6 +8,10 @@ import ShellClient from '../components/ShellClient';
 export const metadata: Metadata = {
   title: 'masaxsuzu',
   description: 'Portfolio Website',
+};
+
+export const viewport: Viewport = {
+  viewportFit: 'cover',
 };
 
 export default async function RootLayout({
