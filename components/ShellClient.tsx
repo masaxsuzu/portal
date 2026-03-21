@@ -17,9 +17,7 @@ export default function ShellClient({
       {/* Content area — pushed right when menu opens */}
       <main
         className={`flex flex-col flex-1 pt-14 transition-all duration-300 ease-in-out ${
-          isOpen
-            ? 'translate-x-60 shadow-[-20px_0_48px_rgba(0,0,0,0.25)]'
-            : ''
+          isOpen ? 'translate-x-60 shadow-[-20px_0_48px_rgba(0,0,0,0.25)]' : ''
         }`}
         onClick={() => {
           if (isOpen) setIsOpen(false);

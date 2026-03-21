@@ -60,7 +60,9 @@ describe('ShellClient', () => {
     });
 
     expect(
-      container.querySelector('[data-testid="controls"]')?.getAttribute('data-open')
+      container
+        .querySelector('[data-testid="controls"]')
+        ?.getAttribute('data-open')
     ).toBe('false');
 
     act(() => {
@@ -75,11 +77,15 @@ describe('ShellClient', () => {
     });
 
     act(() => {
-      (container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement).click();
+      (
+        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
+      ).click();
     });
 
     expect(
-      container.querySelector('[data-testid="controls"]')?.getAttribute('data-open')
+      container
+        .querySelector('[data-testid="controls"]')
+        ?.getAttribute('data-open')
     ).toBe('true');
 
     act(() => {
@@ -94,7 +100,9 @@ describe('ShellClient', () => {
     });
 
     act(() => {
-      (container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement).click();
+      (
+        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
+      ).click();
     });
 
     const main = container.querySelector('main');
@@ -116,7 +124,9 @@ describe('ShellClient', () => {
     });
 
     expect(
-      container.querySelector('[data-testid="controls"]')?.getAttribute('data-open')
+      container
+        .querySelector('[data-testid="controls"]')
+        ?.getAttribute('data-open')
     ).toBe('false');
 
     act(() => {
@@ -132,10 +142,14 @@ describe('ShellClient', () => {
 
     // open
     act(() => {
-      (container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement).click();
+      (
+        container.querySelector('[aria-label="Open menu"]') as HTMLButtonElement
+      ).click();
     });
     expect(
-      container.querySelector('[data-testid="controls"]')?.getAttribute('data-open')
+      container
+        .querySelector('[data-testid="controls"]')
+        ?.getAttribute('data-open')
     ).toBe('true');
 
     // click main to close
@@ -143,7 +157,9 @@ describe('ShellClient', () => {
       (container.querySelector('main') as HTMLElement).click();
     });
     expect(
-      container.querySelector('[data-testid="controls"]')?.getAttribute('data-open')
+      container
+        .querySelector('[data-testid="controls"]')
+        ?.getAttribute('data-open')
     ).toBe('false');
 
     act(() => {

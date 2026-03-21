@@ -64,7 +64,10 @@ const LogoutIcon = () => (
   </svg>
 );
 
-export default function Controls({ isOpen: isOpenProp, setIsOpen: setIsOpenProp }: Props = {}) {
+export default function Controls({
+  isOpen: isOpenProp,
+  setIsOpen: setIsOpenProp,
+}: Props = {}) {
   const [isOpenInternal, setIsOpenInternal] = useState(false);
   const isOpen = isOpenProp ?? isOpenInternal;
   const setIsOpen = setIsOpenProp ?? setIsOpenInternal;
