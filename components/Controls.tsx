@@ -114,9 +114,7 @@ export default function Controls() {
                 aria-checked={theme === 'dark'}
                 className="flex items-center justify-between px-5 py-4 text-primary hover:bg-background transition-colors"
               >
-                <span className="text-sm">
-                  {theme === 'dark' ? t.menuDark : t.menuLight}
-                </span>
+                <span className="text-sm">{t.menuTheme}</span>
                 {theme === 'dark' ? <MoonIcon /> : <SunIcon />}
               </button>
 
