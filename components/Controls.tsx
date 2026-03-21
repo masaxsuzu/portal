@@ -102,8 +102,9 @@ export default function Controls({
     <>
       {/* Fixed header — always transparent; notch fill only when menu is closed */}
       <header className="fixed top-0 inset-x-0 z-30">
-        {/* Notch fill: visible when closed, hidden when open (menu takes over that space) */}
-        {!isOpen && <div className="bg-background h-[var(--sat)]" />}
+        {/* Notch spacer: always pushes button below notch.
+            bg-background only when menu is open (reverts on X / close). */}
+        <div className={`h-[var(--sat)] ${isOpen ? 'bg-background' : ''}`} />
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Open menu"
