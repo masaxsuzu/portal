@@ -17,7 +17,7 @@ export default async function RootLayout({
 }) {
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
-    <html>
+    <html className="bg-background">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
