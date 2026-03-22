@@ -1,12 +1,19 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { headers } from 'next/headers';
 import '../styles/globals.css';
 import { AppProvider } from '../contexts/AppContext';
+import ShellClient from '../components/ShellClient';
 
 export const metadata: Metadata = {
   title: 'masaxsuzu',
   description: 'Portfolio Website',
+};
+
+export const viewport: Viewport = {
+  viewportFit: 'cover',
+  // Default to dark; Controls.tsx updates this dynamically when theme changes.
+  themeColor: '#13111a',
 };
 
 export default async function RootLayout({
@@ -16,7 +23,7 @@ export default async function RootLayout({
 }) {
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
-    <html>
+    <html className="bg-background">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -29,27 +36,6 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/brands.min.css"
-          integrity="sha512-+oRH6u1nDGSm3hH8poU85YFIVTdSnS2f+texdPGrURaJh8hzmhMiZrQth6l56P4ZQmxeZzd2DqVEMqQoJ8J89A=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/fontawesome.min.css"
-          integrity="sha512-RvQxwf+3zJuNwl4e0sZjQeX7kUa3o82bDETpgVCH2RiwYSZVDdFJ7N/woNigN/ldyOOoKw8584jM4plQdt8bhA=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/solid.min.css"
-          integrity="sha512-uj2QCZdpo8PSbRGL/g5mXek6HM/APd7k/B5Hx/rkVFPNOxAQMXD+t+bG4Zv8OAdUpydZTU3UHmyjjiHv2Ww0PA=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
         <link rel="icon" href="/favicon.ico" />
         <Script
           src="/theme-init.js"
@@ -57,8 +43,10 @@ export default async function RootLayout({
           nonce={nonce}
         />
       </head>
-      <body>
-        <AppProvider>{children}</AppProvider>
+      <body className="flex flex-col min-h-dvh bg-background">
+        <AppProvider>
+          <ShellClient>{children}</ShellClient>
+        </AppProvider>
       </body>
     </html>
   );
