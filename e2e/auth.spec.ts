@@ -14,7 +14,7 @@ async function login(page: Page) {
   await setStubUser('testuser');
   await page.goto('/login');
   await page.locator('a[href="/api/auth/github"]').click();
-  await expect(page).toHaveURL('/');
+  await page.waitForURL('/');
 }
 
 test('許可ユーザーがログインするとホームに到達する', async ({ page }) => {
