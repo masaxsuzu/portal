@@ -29,6 +29,12 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.51.1",
