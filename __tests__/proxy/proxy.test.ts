@@ -79,6 +79,37 @@ describe('proxy', () => {
       const res = await proxy(req);
       expect(res.status).toBe(200);
     });
+
+    it('should allow access to /api/auth/github without cookie', async () => {
+      const req = makeRequest('/api/auth/github');
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should allow access to /api/auth/callback without cookie', async () => {
+      const req = makeRequest('/api/auth/callback');
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should allow access to /api/auth/logout without cookie', async () => {
+      const req = makeRequest('/api/auth/logout');
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should allow access to /api/auth/bypass without cookie', async () => {
+      const req = makeRequest('/api/auth/bypass');
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should redirect unknown path to /login without cookie', async () => {
+      const req = makeRequest('/hoge');
+      const res = await proxy(req);
+      expect(res.status).toBe(307);
+      expect(res.headers.get('location')).toContain('/login');
+    });
   });
 
   describe('invalid cookie', () => {
@@ -109,7 +140,20 @@ describe('proxy', () => {
       const req = makeRequest('/login', validToken);
       const res = await proxy(req);
       expect(res.status).toBe(307);
-      expect(res.headers.get('location')).toContain('/');
+      expect(res.headers.get('location')).toMatch(/\/$/);
+    });
+
+    it('should allow access to /api/auth/logout with valid cookie', async () => {
+      const req = makeRequest('/api/auth/logout', validToken);
+      const res = await proxy(req);
+      expect(res.status).toBe(200);
+    });
+
+    it('should redirect unknown path to / with valid cookie', async () => {
+      const req = makeRequest('/hoge', validToken);
+      const res = await proxy(req);
+      expect(res.status).toBe(307);
+      expect(res.headers.get('location')).toMatch(/\/$/);
     });
   });
 

@@ -61,7 +61,9 @@ function buildCsp(nonce: string): string {
 export async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const authCookie = request.cookies.get('auth');
-  const isLoginPage = request.nextUrl.pathname.startsWith('/login');
+  const pathname = request.nextUrl.pathname;
+  const isPublicPath =
+    pathname.startsWith('/login') || pathname.startsWith('/api/auth/');
   const allowedUser = process.env.GITHUB_ALLOWED_USER;
 
   const redirect = (path: string) => {
@@ -85,7 +87,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!authCookie) {
-    if (!isLoginPage) return redirect('/login');
+    if (!isPublicPath) return redirect('/login');
   } else {
     const isValid = await verifySessionToken(authCookie.value, allowedUser);
     if (!isValid) {
@@ -93,7 +95,8 @@ export async function proxy(request: NextRequest) {
       res.cookies.delete('auth');
       return res;
     }
-    if (isLoginPage) return redirect('/');
+    if (pathname === '/login') return redirect('/');
+    if (!isPublicPath && pathname !== '/') return redirect('/');
   }
 
   const response = NextResponse.next({
@@ -109,5 +112,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon\\.ico).*)'],
 };
