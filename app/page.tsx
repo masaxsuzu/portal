@@ -5,16 +5,26 @@ import About from '../components/About';
 import MainCta from '../components/MainCta';
 import Divider from '../components/Divider';
 import Cards from '../components/Cards';
+import Skills from '../components/Skills';
+import Timeline from '../components/Timeline';
 import { useAppContext } from '../contexts/AppContext';
 import type { Translations } from '../lib/i18n';
 
-type ComponentMapKeyType = 'About' | 'MainCta' | 'Divider' | 'Cards';
+type ComponentMapKeyType =
+  | 'About'
+  | 'MainCta'
+  | 'Divider'
+  | 'Cards'
+  | 'Skills'
+  | 'Timeline';
 
 const componentMap = {
   About,
   MainCta,
   Divider,
   Cards,
+  Skills,
+  Timeline,
 };
 
 function applyTranslations(
@@ -25,6 +35,8 @@ function applyTranslations(
   if (name === 'MainCta') return { ...itemData, bio: t.mainCtaBio };
   if (name === 'About')
     return { ...itemData, title: t.aboutTitle, description: t.aboutDesc };
+  if (name === 'Skills') return { ...itemData, title: t.skillsTitle };
+  if (name === 'Timeline') return { ...itemData, title: t.timelineTitle };
   if (name === 'Cards') return { ...itemData, title: t.cardsTitle };
   return itemData;
 }
