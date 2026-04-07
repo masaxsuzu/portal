@@ -53,6 +53,24 @@ describe('HomePage', () => {
     act(() => root.unmount());
   });
 
+  it('renders Skills section heading', () => {
+    const root = renderHome();
+    const headings = Array.from(container.querySelectorAll('h2')).map(
+      (h) => h.textContent
+    );
+    expect(headings).toContain('Skills');
+    act(() => root.unmount());
+  });
+
+  it('renders Timeline section heading', () => {
+    const root = renderHome();
+    const headings = Array.from(container.querySelectorAll('h2')).map(
+      (h) => h.textContent
+    );
+    expect(headings).toContain('Career');
+    act(() => root.unmount());
+  });
+
   it('renders all 4 cards from data.json', () => {
     const root = renderHome();
     const links = container.querySelectorAll(

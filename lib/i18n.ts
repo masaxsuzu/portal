@@ -5,7 +5,9 @@ export const translations = {
     mainCtaBio: 'Software Engineer | C# | Fitness enthusiast',
     aboutTitle: 'About Me',
     aboutDesc:
-      "Hi! I'm masaxsuzu, a software engineer, most of the time I work in Desktop App and Backend development (C#) and some other stuffs. I also like contributing on open source projects and learning new computer science concepts! Outside of coding, I work out at the gym.",
+      "Hi! I'm masaxsuzu, a software engineer, most of the time I work in Desktop App and Backend development (C#) and some other stuffs. I also like contributing on open source projects and learning new computer science concepts! Outside of coding, I work out at the gym and enjoy Yu-Gi-Oh.",
+    skillsTitle: 'Skills',
+    timelineTitle: 'Career',
     cardsTitle: 'Public Content',
     loginTitle: 'Welcome',
     loginSubtext: "masaxsuzu's private portfolio",
@@ -24,7 +26,9 @@ export const translations = {
     mainCtaBio: 'ソフトウェアエンジニア | C# | フィットネス愛好家',
     aboutTitle: '自己紹介',
     aboutDesc:
-      'こんにちは！masaxsuzu です。主にデスクトップアプリ・バックエンド開発（C#）に携わっています。オープンソースへの貢献やコンピュータサイエンスの学習も好きです。コーディング以外ではジムでトレーニングをしています。',
+      'こんにちは！masaxsuzu です。主にデスクトップアプリ・バックエンド開発（C#）に携わっています。オープンソースへの貢献やコンピュータサイエンスの学習も好きです。コーディング以外ではジムでトレーニングをしたり、遊戯王を楽しんでいます。',
+    skillsTitle: 'スキル',
+    timelineTitle: '経歴',
     cardsTitle: '公開コンテンツ',
     loginTitle: 'ようこそ',
     loginSubtext: 'masaxsuzu のプライベートポートフォリオです',
