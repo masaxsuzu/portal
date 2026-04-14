@@ -1,7 +1,6 @@
 interface TimelineEvent {
   period: string;
-  company: string;
-  role: string;
+  description: string;
 }
 
 interface TimelineProps {
@@ -18,8 +17,7 @@ export default function Timeline({ data }: { data: TimelineProps }) {
           <div key={idx} className="relative">
             <span className="absolute -left-[1.625rem] top-1 w-3 h-3 rounded-full bg-primary" />
             <p className="text-primary text-[14px] mb-1">{event.period}</p>
-            <p className="text-white font-bold">{event.company}</p>
-            <p className="text-primary">{event.role}</p>
+            <p className="text-white">{event.description}</p>
           </div>
         ))}
       </div>
