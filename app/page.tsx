@@ -36,7 +36,11 @@ function applyTranslations(
   if (name === 'About')
     return { ...itemData, title: t.aboutTitle, description: t.aboutDesc };
   if (name === 'Skills')
-    return { ...itemData, title: t.skillsTitle, categories: t.skillsCategories };
+    return {
+      ...itemData,
+      title: t.skillsTitle,
+      categories: t.skillsCategories,
+    };
   if (name === 'Timeline')
     return { ...itemData, title: t.timelineTitle, events: t.timelineEvents };
   if (name === 'Cards') return { ...itemData, title: t.cardsTitle };

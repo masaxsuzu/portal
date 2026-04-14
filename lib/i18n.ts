@@ -13,7 +13,11 @@ export const translations = {
     ],
     timelineTitle: 'Career',
     timelineEvents: [
-      { period: '2015', description: "Master's in Engineering (Electrical & Information Science)" },
+      {
+        period: '2015',
+        description:
+          "Master's in Engineering (Electrical & Information Science)",
+      },
       { period: '2015 –', description: 'Software Engineer' },
       { period: '2022', description: "Joined Gold's Gym" },
       { period: '2025', description: 'Married' },
