@@ -28,10 +28,7 @@
       "name": "Skills",
       "data": {
         "title": "Skills",
-        "categories": [
-          { "name": "Languages", "items": ["C#", "C", "Rust", "TypeScript"] },
-          { "name": "Fields", "items": ["Desktop App", "Backend", "OSS"] }
-        ]
+        "categories": []
       }
     },
     {
@@ -42,13 +39,7 @@
       "name": "Timeline",
       "data": {
         "title": "Career",
-        "events": [
-          {
-            "period": "20XX - Present",
-            "company": "...",
-            "role": "Software Engineer"
-          }
-        ]
+        "events": []
       }
     },
     {
@@ -58,7 +49,7 @@
     {
       "name": "Cards",
       "data": {
-        "title": "Public Content",
+        "title": "Public Contents",
         "data": [
           {
             "title": "A RDBMS",

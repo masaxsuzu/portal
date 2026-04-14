@@ -49,7 +49,7 @@ describe('HomePage', () => {
     const headings = Array.from(container.querySelectorAll('h2')).map(
       (h) => h.textContent
     );
-    expect(headings).toContain('Public Content');
+    expect(headings).toContain('Public Contents');
     act(() => root.unmount());
   });
 

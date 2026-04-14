@@ -17,8 +17,8 @@ describe('Timeline Component', () => {
   const mockData = {
     title: 'Career',
     events: [
-      { period: '2020 - Present', company: 'Acme Corp', role: 'Engineer' },
-      { period: '2018 - 2020', company: 'Beta Inc', role: 'Developer' },
+      { period: '2020 - Present', description: 'Software Engineer' },
+      { period: '2018 - 2020', description: 'Developer' },
     ],
   };
 
@@ -47,18 +47,10 @@ describe('Timeline Component', () => {
     act(() => root.unmount());
   });
 
-  it('renders company for each event', () => {
+  it('renders description for each event', () => {
     const root = createRoot(container);
     act(() => root.render(<Timeline data={mockData} />));
-    expect(container.textContent).toContain('Acme Corp');
-    expect(container.textContent).toContain('Beta Inc');
-    act(() => root.unmount());
-  });
-
-  it('renders role for each event', () => {
-    const root = createRoot(container);
-    act(() => root.render(<Timeline data={mockData} />));
-    expect(container.textContent).toContain('Engineer');
+    expect(container.textContent).toContain('Software Engineer');
     expect(container.textContent).toContain('Developer');
     act(() => root.unmount());
   });

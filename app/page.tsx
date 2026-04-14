@@ -35,8 +35,14 @@ function applyTranslations(
   if (name === 'MainCta') return { ...itemData, bio: t.mainCtaBio };
   if (name === 'About')
     return { ...itemData, title: t.aboutTitle, description: t.aboutDesc };
-  if (name === 'Skills') return { ...itemData, title: t.skillsTitle };
-  if (name === 'Timeline') return { ...itemData, title: t.timelineTitle };
+  if (name === 'Skills')
+    return {
+      ...itemData,
+      title: t.skillsTitle,
+      categories: t.skillsCategories,
+    };
+  if (name === 'Timeline')
+    return { ...itemData, title: t.timelineTitle, events: t.timelineEvents };
   if (name === 'Cards') return { ...itemData, title: t.cardsTitle };
   return itemData;
 }
