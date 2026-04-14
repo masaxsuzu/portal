@@ -5,7 +5,7 @@ export const translations = {
     mainCtaBio: 'Software Engineer | C# | Fitness enthusiast',
     aboutTitle: 'About Me',
     aboutDesc:
-      "Hi! I'm masaxsuzu, a software engineer, most of the time I work in Desktop App and Backend development (C#) and some other stuffs. I also like contributing on open source projects and learning new computer science concepts! Outside of coding, I work out at the gym and enjoy Yu-Gi-Oh.",
+      "Hi! I'm masaxsuzu, a software engineer, most of the time I work in Desktop App and Backend development (C#) and some other stuffs. I also like learning new computer science concepts! Outside of coding, I work out at the gym and enjoy Yu-Gi-Oh.",
     skillsTitle: 'Skills',
     skillsCategories: [
       { name: 'Languages', items: ['C#', 'C', 'Rust', 'TypeScript'] },
