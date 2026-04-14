@@ -23,7 +23,10 @@ export const translations = {
       { period: '2020', description: 'c3 — C Compiler (Rust)' },
       { period: '2022', description: 'skyla — RDBMS (C#)' },
       { period: '2022', description: "Joined Gold's Gym" },
-      { period: '2022', description: 'hand-simulator — Yu-Gi-Oh Hand Simulator' },
+      {
+        period: '2022',
+        description: 'hand-simulator — Yu-Gi-Oh Hand Simulator',
+      },
       { period: '2025', description: 'Married' },
     ],
     cardsTitle: 'Public Contents',
@@ -58,7 +61,10 @@ export const translations = {
       { period: '2020', description: 'c3 — C コンパイラ（Rust）' },
       { period: '2022', description: 'skyla — RDBMS（C#）' },
       { period: '2022', description: 'ゴールドジム入会' },
-      { period: '2022', description: 'hand-simulator — 遊戯王ハンドシミュレーター' },
+      {
+        period: '2022',
+        description: 'hand-simulator — 遊戯王ハンドシミュレーター',
+      },
       { period: '2025', description: '入籍' },
     ],
     cardsTitle: '公開コンテンツ',
