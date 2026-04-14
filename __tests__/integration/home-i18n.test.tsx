@@ -51,7 +51,7 @@ describe('HomePage i18n integration', () => {
       'Software Engineer | C# | Fitness enthusiast'
     );
     expect(container.textContent).toContain('About Me');
-    expect(container.textContent).toContain('Public Content');
+    expect(container.textContent).toContain('Public Contents');
 
     act(() => root.unmount());
   });
