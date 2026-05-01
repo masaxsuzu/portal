@@ -45,10 +45,13 @@
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
     "jest-environment-node": "^30.3.0",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.10",
     "prettier": "^3.8.0",
     "supertest": "^7.0.0",
     "tailwindcss": "^4.1.5",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   }
 }

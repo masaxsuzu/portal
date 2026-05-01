@@ -10,14 +10,6 @@ import Timeline from '../components/Timeline';
 import { useAppContext } from '../contexts/AppContext';
 import type { Translations } from '../lib/i18n';
 
-type ComponentMapKeyType =
-  | 'About'
-  | 'MainCta'
-  | 'Divider'
-  | 'Cards'
-  | 'Skills'
-  | 'Timeline';
-
 const componentMap = {
   About,
   MainCta,
@@ -26,6 +18,8 @@ const componentMap = {
   Skills,
   Timeline,
 };
+
+type ComponentMapKeyType = keyof typeof componentMap;
 
 function applyTranslations(
   name: string,
@@ -56,6 +50,7 @@ export default function HomePage() {
         {data?.components?.map((item, idx) => {
           const key = item?.name as ComponentMapKeyType;
           const Comp = componentMap[key];
+          if (!Comp) return null;
           const translatedData = applyTranslations(
             item.name,
             item?.data as Record<string, unknown>,
