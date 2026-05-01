@@ -15,6 +15,9 @@ GITHUB_CLIENT_ID=your-client-id
 GITHUB_CLIENT_SECRET=your-client-secret
 GITHUB_ALLOWED_USER=your-github-username
 SESSION_SECRET=your-random-secret
+
+# ローカル開発用（設定するとOAuth認証をスキップ）
+AUTH_BYPASS_USER=your-github-username
 ```
 
 ```bash
@@ -22,3 +25,10 @@ npm run dev
 ```
 
 [http://localhost:3000](http://localhost:3000) をブラウザで開く。
+
+## テスト
+
+```bash
+npm test              # ユニット / 統合テスト
+npm run test:coverage # カバレッジレポート付き
+```
