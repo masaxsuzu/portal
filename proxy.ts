@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export { createSessionToken } from './lib/session';
-
 const SESSION_TTL_SECONDS = 60 * 60 * 3; // 3時間
 
 export async function verifySessionToken(
@@ -59,7 +57,8 @@ function buildCsp(nonce: string): string {
 }
 
 export async function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const nonceBytes = crypto.getRandomValues(new Uint8Array(16));
+  const nonce = btoa(String.fromCharCode(...nonceBytes));
   const authCookie = request.cookies.get('auth');
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
   const allowedUser = process.env.GITHUB_ALLOWED_USER;
