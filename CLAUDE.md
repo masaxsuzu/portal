@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-このプロジェクトは masaxsuzu の技術的な遊び場である。
+このプロジェクトは masaxsuzu のポートフォリオサイト兼技術的な遊び場である。
 
 Claude Code を使って開発することを前提にしている。
 
@@ -14,7 +14,7 @@ Claude Code を使って開発することを前提にしている。
 ## プロジェクト構造
 
 - `app/` — ページ・API ルート（App Router）
-- `components/` — UI コンポーネント
+- `components/` — UI コンポーネント（About, MainCta, Skills, Timeline, Cards, Divider）
 - `contexts/` — AppContext（言語・テーマ）
 - `lib/` — session.ts / i18n.ts
 
@@ -30,4 +30,7 @@ Claude Code を使って開発することを前提にしている。
 ## pre-push フック（Husky）
 
 `git push` 時に自動実行:
-`npm run lint && npm run test:coverage:ci && npm run build && npm run format && npm run format:check`
+
+```bash
+npm run lint && npm run test:coverage:ci && npm run build && npm run format && npm run format:check
+```
