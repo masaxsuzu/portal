@@ -28,4 +28,4 @@ Generate a GitHub PR creation URL from the current branch.
 4. Present to the user:
    - The clickable one-click PR creation URL (with title and body embedded as query parameters)
    - The PR title and description in plain text for reference
-   - Write the description in Japanese, matching the repo's language convention
+   - Write the description in the same language as the current conversation
